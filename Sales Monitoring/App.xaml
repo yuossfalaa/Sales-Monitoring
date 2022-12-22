@@ -18,6 +18,7 @@
             <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#4473c5"/>
             <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#4473c5"/>
             <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#4473c5"/>
+            <SolidColorBrush x:Key="GridBackgroundBruch" Color="#4473c5" Opacity="0.3"/>
 
 
         </ResourceDictionary>
