@@ -1,0 +1,194 @@
+﻿<UserControl x:Class="Sales_Monitoring.Views.RecordSales"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:local="clr-namespace:Sales_Monitoring.Views" 
+             xmlns:ViewModels="clr-namespace:Sales_Monitoring"
+             Height="720" Width="1280">
+    <UserControl.DataContext>
+        <ViewModels:RecordSalesViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="9*"/>
+                <RowDefinition Height="35*"/>
+            </Grid.RowDefinitions>
+            <Border BorderThickness="0,0,0,2" BorderBrush="#4473c5" Margin="20,0,20,0" Grid.Row="0">
+                <TextBox BorderBrush="#4473c5" BorderThickness="3" 
+                         Text="{Binding SearchItemText ,Mode=TwoWay}"
+                         Margin="40,30,40,40" materialDesign:HintAssist.Hint="Search Item" 
+                         materialDesign:HintAssist.FontFamily="Segoe UI Bold" 
+                         materialDesign:TextFieldAssist.HasFilledTextField="True" 
+                         FontSize="26" Height="63" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <i:InvokeCommandAction 
+                                Command="{Binding SearchTextChangedCommand}"
+                                CommandParameter="{Binding SearchItemText}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+            </Border>
+            <ScrollViewer Margin="20,0,0,0" Grid.Row="1">
+                <ItemsControl x:Name="ItemsList" ItemsSource="{Binding items}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Width="140" Height="150"  
+                            Command="{Binding  RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.AddItemToOrderCommand}"
+                            CommandParameter="{Binding}"
+                            Background="#e9ebea" BorderBrush="{Binding color}" BorderThickness="0,0,0,3" 
+                            Margin="5,10,5,0"
+                            Style="{StaticResource MaterialDesignFlatLightBgButton}">
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="140" Height="150" >
+                                    <TextBlock FontSize="24"  Margin="10,20,10,0" 
+                                               TextAlignment="Center"  TextWrapping="Wrap">
+                                        <TextBlock.Text>
+                                            <Binding Path="ItemName">
+                                                <Binding.StringFormat>
+                                                    Add on {0}
+                                                </Binding.StringFormat>
+                                            </Binding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <TextBlock FontSize="22"  
+                                               TextAlignment="Center" Foreground="#DD4E4B4B" >
+                                        <TextBlock.Text>
+                                            <Binding Path="ItemPrice">
+                                                <Binding.StringFormat>
+                                                    ₹ {0}
+                                                </Binding.StringFormat>
+                                            </Binding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Border BorderThickness="2,0,0,0" Margin="0,50,0,50" BorderBrush="#4473c5">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Label Content="In Store Order" FontSize="26" Margin="80,0,0,20" FontFamily="Segoe UI Bold"/>
+                        <Border Background="#e9ebea" Margin="40,0,40,0" BorderBrush="Gray" BorderThickness="0.3">
+                            <StackPanel>
+                                <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Margin="10,0,10,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="item" FontSize="24" Margin="0,3,0,3"/>
+                                        <Label Content="Quantity" FontSize="24" Margin="150,3,0,3"/>
+                                        <Label Content="Price" FontSize="24" Margin="100,3,0,3"/>
+                                    </StackPanel>
+                                </Border>
+                                <ItemsControl  ItemsSource="{Binding order}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Margin="10,0,10,0">
+                                                <Grid >
+                                                    <Label Content="{Binding item.ItemName}" FontSize="22" HorizontalAlignment="Left" />
+                                                    <Button  Style="{StaticResource MaterialDesignIconButton}" 
+                                                             Command="{Binding  RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.RemoveItemCommand}"
+                                                             CommandParameter="{Binding}"
+                                                             Width="40" Height="40" Foreground="Black" 
+                                                             HorizontalAlignment="Left" Margin="170,0,0,0">
+                                                        <materialDesign:PackIcon Kind="MinusCircleOutline" Width="30" Height="30"/>
+                                                    </Button>
+                                                    <TextBox Text="{Binding Quantity, Mode=TwoWay}"  FontSize="22"  TextAlignment="Center" 
+                                                             Width="100"  HorizontalAlignment="Left"  Margin="210,0,0,0">
+                                                        <i:Interaction.Triggers>
+                                                            <i:EventTrigger EventName="LostFocus">
+                                                                <i:InvokeCommandAction 
+                                                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},
+                                                                    Path=DataContext.QuantityTextChangedCommand}" 
+                                                                    CommandParameter="{Binding}"/>
+                                                            </i:EventTrigger>
+                                                        </i:Interaction.Triggers>
+                                                    </TextBox>
+                                                    <Button  Style="{StaticResource MaterialDesignIconButton}" 
+                                                             Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},  Path=DataContext.AddItemCommand}"
+                                                             CommandParameter="{Binding}"
+                                                             Width="40" Height="40" Foreground="Black" HorizontalAlignment="Left" Margin="310,0,0,0">
+                                                        <materialDesign:PackIcon Kind="PlusCircleOutline" Width="30" Height="30"/>
+                                                    </Button>
+                                                    <TextBox  Width="100" FontSize="22" Margin="380,4,0,6" HorizontalAlignment="Left" TextAlignment="Center" IsEnabled="{Binding Path=IsChecked, ElementName=EnableEditing}">
+                                                        <TextBox.Text>
+                                                            <Binding Path="item.ItemPrice">
+                                                                <Binding.StringFormat>
+                                                                    {0}
+                                                                </Binding.StringFormat>
+                                                            </Binding>
+                                                        </TextBox.Text>
+                                                    </TextBox>
+                                                    <ToggleButton x:Name="EnableEditing"
+                                                    IsChecked="False"
+                                                    Width="30" Height="30" 
+                                                    HorizontalAlignment="Left" Margin="480,0,0,0"
+                                                    Style="{StaticResource MaterialDesignActionToggleButton}"
+                                                    Content="{materialDesign:PackIcon Kind=PencilOutline}"
+                                                    materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=PencilOffOutline}" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Margin="10,0,10,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Taxes" FontSize="22" Margin="0,5,0,5"/>
+                                        <Label Content="{Binding TaxesLabel}" FontSize="22" Margin="357,5,0,5"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border BorderBrush="Gray" BorderThickness="0,0,0,0" Margin="10,0,10,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Roundoff" FontSize="22" Margin="0,5,0,5"/>
+                                        <Label Content="{Binding RoundoffLabel}" FontSize="22" Margin="320,5,0,5"/>
+                                    </StackPanel>
+                                </Border>
+                                <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
+                                    <Label Content="Discount" FontSize="22" FontFamily="Segoe UI Bold"  Margin="0,5,0,5"/>
+                                    <Label Content="{Binding DiscountLabel}" FontSize="22" Margin="320,5,0,5"/>
+                                </StackPanel>
+                                <Grid  Margin="10,0,10,0">
+                                    <StackPanel HorizontalAlignment="Center"  Margin="0,0,0,0" Orientation="Horizontal">
+                                        <RadioButton Height="35"
+                                        Style="{StaticResource MaterialDesignChoiceChipPrimaryRadioButton}"                                        
+                                        IsChecked="{Binding CashSelected,Mode=TwoWay}"
+                                        Content="Cash"  GroupName="Payment" FontSize="20" Margin="55,10,20,10"/>
+                                        <RadioButton Height="35"
+                                        Style="{StaticResource MaterialDesignChoiceChipPrimaryRadioButton}"  
+                                        IsChecked="{Binding CardSelected , Mode=TwoWay}"
+                                        Content="Card"  GroupName="Payment" FontSize="20"  Margin="10,10,20,10"/>
+                                        <RadioButton Height="35"
+                                        Style="{StaticResource MaterialDesignChoiceChipPrimaryRadioButton}"    
+                                        IsChecked="{Binding UPI_GPAYSelected , Mode=TwoWay}"
+                                        Content="UPI/GPAY"  GroupName="Payment" FontSize="20"  Margin="10,10,20,10"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Button Margin="10,20,10,10" BorderThickness="0"
+                                Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                                Command="{Binding SaveBillCommand}"
+                                CommandParameter="{Binding order}"
+                                Content="Save Bill" Height="60" FontSize="26"/>
+
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+        </Grid>
+    </Grid>
+</UserControl>
