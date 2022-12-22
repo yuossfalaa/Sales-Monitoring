@@ -1,4 +1,4 @@
-﻿using MVVM;
+﻿using Sales_Monitoring.ViewModels;
 
 namespace Sales_Monitoring
 {
