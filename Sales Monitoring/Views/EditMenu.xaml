@@ -5,7 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Sales_Monitoring.Views"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ViewModels="clr-namespace:Sales_Monitoring.ViewModels">
+    <UserControl.DataContext>
+        <ViewModels:EditMenuViewModel/>
+    </UserControl.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -24,11 +27,13 @@
             CanUserAddRows="True"
             SelectionUnit="Cell"
             SelectionMode="Extended" 
+                  AutoGenerateColumns="False"
             Margin="20"
             FontSize="22"
+            ItemsSource="{Binding Path=items}"
             >
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn
+                <!--<DataGridCheckBoxColumn
                     Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
                     ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
                     EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
@@ -36,9 +41,8 @@
                         <Border
                             Background="Transparent">
                             <CheckBox
-                                 />
+                                IsChecked="{Binding Data.IsAllItems1Selected, Source={StaticResource DataContextProxy}}" />
 
-                            <!--IsChecked="{Binding Data.IsAllItems1Selected, Source={StaticResource DataContextProxy}}"-->
                         </Border>
                     </DataGridCheckBoxColumn.Header>
                     <DataGridCheckBoxColumn.HeaderStyle>
@@ -50,7 +54,7 @@
                                 Value="Center" />
                         </Style>
                     </DataGridCheckBoxColumn.HeaderStyle>
-                </DataGridCheckBoxColumn>
+                </DataGridCheckBoxColumn>-->
                 <materialDesign:DataGridTextColumn
                     Header="Product Name"
                     Foreground="{StaticResource PrimaryHueDarkBrush}"
@@ -68,7 +72,7 @@
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                     <materialDesign:DataGridTextColumn.Binding>
                         <Binding
-                            Path="ItemName">
+                            Path="ItemPrice">
                         </Binding>
                     </materialDesign:DataGridTextColumn.Binding>
                 </materialDesign:DataGridTextColumn>
@@ -78,7 +82,7 @@
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                     <materialDesign:DataGridTextColumn.Binding>
                         <Binding
-                            Path="Amount">
+                            Path="ItemZomatoPrice">
                         </Binding>
                     </materialDesign:DataGridTextColumn.Binding>
                 </materialDesign:DataGridTextColumn>
@@ -88,7 +92,7 @@
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                     <materialDesign:DataGridTextColumn.Binding>
                         <Binding
-                            Path="Amount">
+                            Path="ItemSwiggyPrice">
                         </Binding>
                     </materialDesign:DataGridTextColumn.Binding>
                 </materialDesign:DataGridTextColumn>

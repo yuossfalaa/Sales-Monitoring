@@ -46,7 +46,7 @@
                             <Button Width="140" Height="150"  
                             Command="{Binding  RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.AddItemToOrderCommand}"
                             CommandParameter="{Binding}"
-                            Background="#e9ebea" BorderBrush="{Binding color}" BorderThickness="0,0,0,3" 
+                            Background="#e9ebea" BorderBrush="#74B9FF" BorderThickness="0,0,0,3" 
                             Margin="5,10,5,0"
                             Style="{StaticResource MaterialDesignFlatLightBgButton}">
                                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="140" Height="150" >

@@ -6,9 +6,12 @@
              xmlns:local="clr-namespace:Sales_Monitoring.Views"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:ViewModels="clr-namespace:Sales_Monitoring"
+             xmlns:ViewModels="clr-namespace:Sales_Monitoring" xmlns:ViewModel="clr-namespace:Sales_Monitoring.ViewModels"
              MaxWidth="1600"
              >
+    <UserControl.DataContext>
+        <ViewModel:ReportViewModel/>
+    </UserControl.DataContext>
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -64,7 +67,8 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" >
                 <DataGrid
-                    CanUserAddRows="True"
+                    CanUserAddRows="False"
+                    IsReadOnly="True"
                     SelectionUnit="Cell"
                     ScrollViewer.CanContentScroll="True" 
                     ScrollViewer.VerticalScrollBarVisibility="Visible"
@@ -74,31 +78,9 @@
                     FontSize="16"
                     MinHeight="450"
                     MaxHeight="600"
+                    MaxWidth="850"
                     Background="{StaticResource GridBackgroundBruch}">
                     <DataGrid.Columns>
-                        <DataGridCheckBoxColumn
-                    Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
-                    ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
-                    EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
-                            <DataGridCheckBoxColumn.Header>
-                                <Border
-                            Background="Transparent">
-                                    <CheckBox
-                                 />
-
-                                    <!--IsChecked="{Binding Data.IsAllItems1Selected, Source={StaticResource DataContextProxy}}"-->
-                                </Border>
-                            </DataGridCheckBoxColumn.Header>
-                            <DataGridCheckBoxColumn.HeaderStyle>
-                                <Style
-                            TargetType="{x:Type DataGridColumnHeader}"
-                            BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-                                    <Setter
-                                Property="HorizontalContentAlignment"
-                                Value="Center" />
-                                </Style>
-                            </DataGridCheckBoxColumn.HeaderStyle>
-                        </DataGridCheckBoxColumn>
                         <materialDesign:DataGridTextColumn
                     Header="Date"
                     ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
@@ -228,41 +210,23 @@
             </StackPanel>
             <StackPanel Grid.Column="1">
                 <DataGrid
-                    CanUserAddRows="True"
+                    CanUserAddRows="False"
+                    IsReadOnly="True"
                     SelectionUnit="Cell"
                     SelectionMode="Extended" 
                     Margin="10,20,10,10"
                     FontSize="16"
                     MinHeight="450"
                     MaxHeight="600"
+                    MaxWidth="610"
                     HorizontalScrollBarVisibility="Visible"
                     VerticalScrollBarVisibility="Visible"
+                    AutoGenerateColumns="False"
+                    ItemsSource="{Binding Path=Expenses}"
                     Background="{StaticResource GridBackgroundBruch}">
                     <DataGrid.Columns>
-                        <DataGridCheckBoxColumn
-                    Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
-                    ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
-                    EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
-                            <DataGridCheckBoxColumn.Header>
-                                <Border
-                            Background="Transparent">
-                                    <CheckBox
-                                 />
-
-                                    <!--IsChecked="{Binding Data.IsAllItems1Selected, Source={StaticResource DataContextProxy}}"-->
-                                </Border>
-                            </DataGridCheckBoxColumn.Header>
-                            <DataGridCheckBoxColumn.HeaderStyle>
-                                <Style
-                            TargetType="{x:Type DataGridColumnHeader}"
-                            BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-                                    <Setter
-                                Property="HorizontalContentAlignment"
-                                Value="Center" />
-                                </Style>
-                            </DataGridCheckBoxColumn.HeaderStyle>
-                        </DataGridCheckBoxColumn>
                         <materialDesign:DataGridTextColumn
+                           
                     Header="Date"
                     ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
@@ -292,12 +256,19 @@
                                 </Binding>
                             </materialDesign:DataGridTextColumn.Binding>
                         </materialDesign:DataGridTextColumn>
-                        <materialDesign:DataGridComboBoxColumn
+                        <materialDesign:DataGridTextColumn
                     Header="Mode"
-                    SelectedValueBinding="{Binding Files}"
-                    ItemsSourceBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},
-                    Path=DataContext.Files}"></materialDesign:DataGridComboBoxColumn>
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
+                            <materialDesign:DataGridTextColumn.Binding>
+                                <Binding
+                            Path="Mode">
+                                </Binding>
+                            </materialDesign:DataGridTextColumn.Binding>
+                        </materialDesign:DataGridTextColumn>
+
                     </DataGrid.Columns>
+
                 </DataGrid>
                 <Label FontSize="22" 
                        Content="Expenses : 20000$" 
