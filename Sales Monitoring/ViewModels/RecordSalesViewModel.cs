@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using Sales_Monitoring.SalesMonitoring.Domain.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
