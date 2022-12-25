@@ -4,9 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Sales_Monitoring.Views"
-             Height="720" Width="1280"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:Nav="clr-namespace:Sales_Monitoring.State.Navigators">
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -20,17 +19,26 @@
                        Margin="20,20,0,10"/>
                 <WrapPanel Orientation="Horizontal" Margin="0,20,0,0">
                     <Button Content="In Store" FontSize="24" 
-                            Width="200" Height="130" Margin="20,0,20,0"
-                            materialDesign:ButtonAssist.CornerRadius="10"/>
+                            Width="200" Height="130" Margin="20,10,20,0"
+                            materialDesign:ButtonAssist.CornerRadius="10"
+                            Command="{Binding UpdateCurrentViewModelCommand}" 
+                            CommandParameter="{x:Static Nav:ViewType.RecordSales}"
+                            />
                     <Button Content="Zomato" FontSize="24" 
-                            Width="200" Height="130" Margin="20,0,20,0"
-                            materialDesign:ButtonAssist.CornerRadius="10"/>
+                            Width="200" Height="130" Margin="20,10,20,0"
+                            materialDesign:ButtonAssist.CornerRadius="10"                            
+                            Command="{Binding UpdateCurrentViewModelCommand}" 
+                            CommandParameter="{x:Static Nav:ViewType.RecordSales}"/>
                     <Button Content="Swiggy" FontSize="24" 
-                            Width="200" Height="130" Margin="20,0,20,0"
-                            materialDesign:ButtonAssist.CornerRadius="10"/>
+                            Width="200" Height="130" Margin="20,10,20,0"
+                            materialDesign:ButtonAssist.CornerRadius="10"
+                            Command="{Binding UpdateCurrentViewModelCommand}" 
+                            CommandParameter="{x:Static Nav:ViewType.RecordSales}"/>
                     <Button Content="Expenses" FontSize="24" 
-                            Width="200" Height="130" Margin="20,0,20,0"
-                            materialDesign:ButtonAssist.CornerRadius="10"/>
+                            Width="200" Height="130" Margin="20,10,20,0"
+                            materialDesign:ButtonAssist.CornerRadius="10"
+                            Command="{Binding UpdateCurrentViewModelCommand}" 
+                            CommandParameter="{x:Static Nav:ViewType.RecordExpenses}"/>
                 </WrapPanel>
             </StackPanel>
             <StackPanel Grid.Row="1">
@@ -39,14 +47,20 @@
                        Margin="20,20,0,10"/>
                 <WrapPanel Orientation="Horizontal" Margin="0,15,0,0">
                     <Button Content="Date" FontSize="24" 
-                            Width="200" Height="130" Margin="20,0,20,0"
-                            materialDesign:ButtonAssist.CornerRadius="10"/>
+                            Width="200" Height="130" Margin="20,10,20,0"
+                            materialDesign:ButtonAssist.CornerRadius="10"
+                            Command="{Binding UpdateCurrentViewModelCommand}" 
+                            CommandParameter="{x:Static Nav:ViewType.ReportView}"/>
                     <Button Content="Week" FontSize="24" 
-                            Width="200" Height="130" Margin="20,0,20,0"
-                            materialDesign:ButtonAssist.CornerRadius="10"/>
+                            Width="200" Height="130" Margin="20,10,20,0"
+                            materialDesign:ButtonAssist.CornerRadius="10"
+                            Command="{Binding UpdateCurrentViewModelCommand}" 
+                            CommandParameter="{x:Static Nav:ViewType.ReportView}"/>
                     <Button Content="Month" FontSize="24" 
-                            Width="200" Height="130" Margin="20,0,20,0"
-                            materialDesign:ButtonAssist.CornerRadius="10"/>
+                            Width="200" Height="130" Margin="20,10,20,0"
+                            materialDesign:ButtonAssist.CornerRadius="10"
+                            Command="{Binding UpdateCurrentViewModelCommand}" 
+                            CommandParameter="{x:Static Nav:ViewType.ReportView}"/>
                 </WrapPanel>
             </StackPanel>
             <StackPanel Grid.Row="2">
@@ -56,7 +70,9 @@
                 <WrapPanel Orientation="Horizontal" Margin="0,15,0,0">
                     <Button Content="Menu" FontSize="24" 
                             Width="200" Height="130" Margin="20,0,20,0"
-                            materialDesign:ButtonAssist.CornerRadius="10"/>
+                            materialDesign:ButtonAssist.CornerRadius="10"
+                            Command="{Binding UpdateCurrentViewModelCommand}" 
+                            CommandParameter="{x:Static Nav:ViewType.EditMenu}"/>
                 </WrapPanel>
             </StackPanel>
 
