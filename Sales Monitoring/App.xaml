@@ -4,7 +4,8 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:Sales_Monitoring"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             StartupUri="MainWindow.xaml">
+             xmlns:ViewModel="clr-namespace:Sales_Monitoring.ViewModels"
+             xmlns:View="clr-namespace:Sales_Monitoring.Views">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -13,13 +14,27 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
                 <ResourceDictionary Source="/ControlStyle/ScrollBar.xaml"/>
-
             </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#4473c5"/>
             <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#4473c5"/>
             <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#4473c5"/>
             <SolidColorBrush x:Key="GridBackgroundBruch" Color="#4473c5" Opacity="0.3"/>
-
+            
+            <DataTemplate DataType="{x:Type ViewModel:HomeViewModel}">
+                <View:HomeView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type ViewModel:EditMenuViewModel}">
+                <View:EditMenu/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type ViewModel:RecordExpensesViewModel}">
+                <View:RecordExpenses/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type ViewModel:RecordSalesViewModel}">
+                <View:RecordSales/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type ViewModel:ReportViewModel}">
+                <View:ReportView/>
+            </DataTemplate>
 
         </ResourceDictionary>
     </Application.Resources>

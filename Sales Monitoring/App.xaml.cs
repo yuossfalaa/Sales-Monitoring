@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Sales_Monitoring.ViewModels;
+using Sales_Monitoring.Views;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +15,16 @@ namespace Sales_Monitoring
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            Window window = new MainWindow();
+
+            MainViewModel viewModel= new MainViewModel();
+            window.DataContext = viewModel;
+
+            window.Show();
+
+            base.OnStartup(e);
+        }
     }
 }
