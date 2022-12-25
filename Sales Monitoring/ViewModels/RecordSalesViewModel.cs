@@ -1,9 +1,8 @@
 ﻿using GalaSoft.MvvmLight.Command;
-using Sales_Monitoring.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace Sales_Monitoring
+namespace Sales_Monitoring.ViewModels
 {
     public class RecordSalesViewModel : ViewModelBase
     {
