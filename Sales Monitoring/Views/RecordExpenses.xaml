@@ -19,23 +19,26 @@
                 Width="200"
                 Height="50"
                 FontSize="24"
+                SelectedDate="{Binding RecordtobeAdded.Date , Mode=TwoWay}"
                 materialDesign:HintAssist.Hint="Pick Date"
                 materialDesign:TextFieldAssist.HasClearButton="True"
                 Margin="20,0,20,0"/>
             <TextBox materialDesign:HintAssist.Hint="Item/Details" 
                      materialDesign:TextFieldAssist.HasClearButton="True"
                      Width="300" Height="50"
-                     Margin="0,0,20,0" FontSize="24"/>
+                     Margin="0,0,20,0" FontSize="24" Text="{Binding RecordtobeAdded.ItemName , Mode=TwoWay}"/>
             <TextBox materialDesign:HintAssist.Hint="Amount" 
                      materialDesign:TextFieldAssist.HasClearButton="True"
                      Width="120" Height="50"
+                     Text="{Binding RecordtobeAdded.Amount , Mode=TwoWay}"
                      Margin="0,0,20,0" FontSize="24"/>
             <ComboBox
                 materialDesign:HintAssist.Hint="Mode of payment"
                 FontSize="24"
                 Height="50"
                 Width="220"
-                Margin="0,0,20,0" >
+                Margin="0,0,20,0" SelectedValuePath="Content" 
+                SelectedValue="{Binding RecordtobeAdded.Mode}">
                 <ComboBoxItem
                     Content="UPI" />
                 <ComboBoxItem
@@ -49,7 +52,8 @@
                 Style="{StaticResource MaterialDesignFlatDarkBgButton}"
                 Margin="50,0,20,0"
                 Height="50"
-                Width="180">
+                Width="180"
+                Command="{Binding AddRecordCommand}">
                 <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="DatabasePlus" Height="40" Width="50"/>
                     <Label Content="Add" FontSize="24" Foreground="White" Height="60"/>
