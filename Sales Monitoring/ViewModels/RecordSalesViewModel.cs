@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using Sales_Monitoring.Commands;
 using Sales_Monitoring.SalesMonitoring.Domain.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -10,16 +11,15 @@ namespace Sales_Monitoring.ViewModels
         #region Constructor
         public RecordSalesViewModel()
         {
-            items = new ObservableCollection<Items>(TestData.getdataItem());
-            order = new ObservableCollection<Order>(TestData.getdataorder());
-            AddItemCommand = new RelayCommand<Order>(Additem, true);
-            RemoveItemCommand = new RelayCommand<Order>(Removeitem, true);
+            //items = new ObservableCollection<Items>(TestData.getdataItem());
+            AddItemCommand = new RelayCommand<Items>(Additem, true);
+            RemoveItemCommand = new RelayCommand<Items>(Removeitem, true);
             AddItemToOrderCommand = new RelayCommand<Items>(AddItemToOrder, true);
             SaveBillCommand = new RelayCommand<ObservableCollection<Order>>(SaveBill, true);
-            QuantityTextChangedCommand = new RelayCommand<Order>(QuantityTextChanged, true);
+            QuantityTextChangedCommand = new RelayCommand<Items>(QuantityTextChanged, true);
             SearchTextChangedCommand = new RelayCommand<string>(SearchItem, true);
             CashSelected = true;
-
+            StoreName = checkStoreName();
 
             //For Example
             //Should implement function to calculate this 
@@ -27,6 +27,8 @@ namespace Sales_Monitoring.ViewModels
             RoundoffLabel = "0.30";
             DiscountLabel = "2.5";
         }
+
+       
         #endregion
 
         #region Commands
@@ -41,7 +43,7 @@ namespace Sales_Monitoring.ViewModels
 
         #region private objects
         private ObservableCollection<Items> _items { get; set; }
-        public ObservableCollection<Order> _order { get; set; }
+        public ObservableCollection<Items> _order { get; set; }
         #endregion
 
         #region Public objects
@@ -58,7 +60,7 @@ namespace Sales_Monitoring.ViewModels
 
             }
         }
-        public ObservableCollection<Order> order 
+        public ObservableCollection<Items> order 
         {
             get
             {
@@ -76,6 +78,7 @@ namespace Sales_Monitoring.ViewModels
         private bool _cashselected { get; set; }
         private bool _cardselected { get; set; }
         private bool _upi_gpayselected { get; set; }
+        private string _storename { get; set; }
         private string _searchitemtext { get; set; }
         private string _taxeslabel { get; set; }
         private string _roundofflabel { get; set; }
@@ -110,6 +113,16 @@ namespace Sales_Monitoring.ViewModels
                 RaisePropertyChanged("UPI_GPAYSelected");
             }
         }
+        public string StoreName
+        {
+            get { return _storename; }
+            set
+            {
+                _storename = value;
+                RaisePropertyChanged("StoreName");
+            }
+        }
+
         public string SearchItemText
         {
             get { return _searchitemtext; }
@@ -154,27 +167,33 @@ namespace Sales_Monitoring.ViewModels
                 RaisePropertyChanged("DiscountLabel");
             }
         }
-       
+
 
         #endregion
 
         #region Private Methods
+        private string checkStoreName()
+        {
+            if (UpdateCurrentViewModelCommand.ViewTypeName == "RecordSales") { return "In Store"; }
+            else if (UpdateCurrentViewModelCommand.ViewTypeName == "RecordSalesZomato") { return "Zomato"; }
+            else { return "Swiggy"; }
+        }
         private void SearchItem(string itemname)
         {
             
             
         }
-        private void Additem(Order Addedorder)
+        private void Additem(Items Addedorder)
         {
             Addedorder.Quantity += 1;
         }
  
-        private void Removeitem(Order ordertoberemoved)
+        private void Removeitem(Items ordertoberemoved)
         {
             if (ordertoberemoved.Quantity >= 1) ordertoberemoved.Quantity -= 1;
             if (ordertoberemoved.Quantity <= 0) order.Remove(ordertoberemoved);
         }
-        private void QuantityTextChanged(Order ordertoberemoved)
+        private void QuantityTextChanged(Items ordertoberemoved)
         {
             if (ordertoberemoved.Quantity <= 0)
             {
@@ -184,7 +203,7 @@ namespace Sales_Monitoring.ViewModels
         }
         private void AddItemToOrder(Items item)
         {
-            order.Add(new Order { item =item ,Quantity=1});
+            order.Add(new Items {ItemName = item.ItemName , Quantity = item.Quantity});
         }
         /// <summary>
         /// Take Order List 

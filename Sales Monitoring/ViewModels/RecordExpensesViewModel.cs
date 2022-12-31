@@ -22,7 +22,7 @@ namespace Sales_Monitoring.ViewModels
         #endregion
         public RecordExpensesViewModel()
         {
-            Expenses = new ObservableCollection<RecordExpenses>(TestData.getdataExpenses());
+            //Expenses = new ObservableCollection<RecordExpenses>(TestData.getdataExpenses());
             
         }
     }

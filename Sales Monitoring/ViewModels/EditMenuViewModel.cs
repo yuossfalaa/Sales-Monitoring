@@ -17,7 +17,7 @@ namespace Sales_Monitoring.ViewModels
         #endregion
         public EditMenuViewModel()
         {
-             items = new ObservableCollection<Items>(TestData.getdataItem());
+             //items = new ObservableCollection<Items>(TestData.getdataItem());
         }
     }
 }
