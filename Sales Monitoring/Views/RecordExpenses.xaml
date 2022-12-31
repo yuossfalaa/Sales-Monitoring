@@ -62,14 +62,24 @@
 
         </StackPanel>
         <DataGrid Grid.Row="1"
-            CanUserAddRows="True"
-            SelectionUnit="Cell"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            SelectionUnit="FullRow"
             SelectionMode="Extended" 
             Margin="20"
             FontSize="22"
             Background="{StaticResource GridBackgroundBruch}" 
             AutoGenerateColumns="False"
-            ItemsSource="{Binding Path=Expenses}">
+            ItemsSource="{Binding Path=Expenses}"
+            SelectedItem="{Binding SelectedItem}"
+                  >
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="CellEditEnding">
+                    <i:InvokeCommandAction 
+                                Command="{Binding EditSelectedItemCommand}"
+                                CommandParameter="{Binding}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <DataGrid.Columns>
                 <materialDesign:DataGridTextColumn
                     Header="Date"
@@ -77,7 +87,8 @@
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                     <materialDesign:DataGridTextColumn.Binding>
                         <Binding
-                            Path="Date">
+                            Path="Date"
+                            UpdateSourceTrigger="PropertyChanged">
                         </Binding>
                     </materialDesign:DataGridTextColumn.Binding>
                 </materialDesign:DataGridTextColumn>
@@ -87,7 +98,8 @@
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                     <materialDesign:DataGridTextColumn.Binding>
                         <Binding
-                            Path="ItemName">
+                            Path="ItemName"
+                            UpdateSourceTrigger="PropertyChanged">
                         </Binding>
                     </materialDesign:DataGridTextColumn.Binding>
                 </materialDesign:DataGridTextColumn>
@@ -97,7 +109,8 @@
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                     <materialDesign:DataGridTextColumn.Binding>
                         <Binding
-                            Path="Amount">
+                            Path="Amount"
+                            UpdateSourceTrigger="PropertyChanged">
                         </Binding>
                     </materialDesign:DataGridTextColumn.Binding>
                 </materialDesign:DataGridTextColumn>
@@ -107,14 +120,18 @@
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                     <materialDesign:DataGridTextColumn.Binding>
                         <Binding
-                            Path="Mode">
+                            Path="Mode"
+                            UpdateSourceTrigger="PropertyChanged">
                         </Binding>
                     </materialDesign:DataGridTextColumn.Binding>
                 </materialDesign:DataGridTextColumn>
-                <DataGridTemplateColumn>
-                    <DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn Header="Delete">
+                    <DataGridTemplateColumn.CellTemplate >
                         <DataTemplate>
-                            <Button  Style="{StaticResource MaterialDesignIconButton}">
+                            <Button  Style="{StaticResource MaterialDesignIconButton}"
+                                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                              Path=DataContext.DeleteSelectedItem}"
+                                     CommandParameter="{Binding}">
                                 <materialDesign:PackIcon Kind="DeleteEmpty" Width="30" Height="30" />
                             </Button>
                         </DataTemplate>

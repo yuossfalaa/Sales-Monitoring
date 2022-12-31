@@ -35,7 +35,7 @@
                 </TextBox>
             </Border>
             <ScrollViewer Margin="20,0,0,0" Grid.Row="1">
-                <ItemsControl x:Name="ItemsList" ItemsSource="{Binding items}">
+                <ItemsControl x:Name="ItemsList" ItemsSource="{Binding items , Mode=TwoWay , UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel/>
@@ -61,9 +61,32 @@
                                         </TextBlock.Text>
                                     </TextBlock>
                                     <TextBlock FontSize="22"  
+                                               Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.InstorePriceTextBoxVisibility,Mode=TwoWay}"
                                                TextAlignment="Center" Foreground="#DD4E4B4B" >
                                         <TextBlock.Text>
-                                            <Binding Path="ItemPrice">
+                                            <Binding Path="ItemInstorePrice">
+                                                <Binding.StringFormat>
+                                                    ₹ {0}
+                                                </Binding.StringFormat>
+                                            </Binding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <TextBlock FontSize="22"  
+                                               Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.ZomatoPriceTextBoxVisibility ,Mode=TwoWay}"
+                                               TextAlignment="Center" Foreground="#DD4E4B4B" >
+                                        <TextBlock.Text>
+                                            <Binding Path="ItemZomatoPrice">
+                                                <Binding.StringFormat>
+                                                    ₹ {0}
+                                                </Binding.StringFormat>
+                                            </Binding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <TextBlock FontSize="22"  
+                                               Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.SwiggyPriceTextBoxVisibility,Mode=TwoWay}"
+                                               TextAlignment="Center" Foreground="#DD4E4B4B" >
+                                        <TextBlock.Text>
+                                            <Binding Path="ItemSwiggyPrice">
                                                 <Binding.StringFormat>
                                                     ₹ {0}
                                                 </Binding.StringFormat>

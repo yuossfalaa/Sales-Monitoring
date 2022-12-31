@@ -20,18 +20,40 @@
                                          Opacity="0.7" Width="40" Height="40"/>
                 <TextBox Margin="50,0,0,0" 
                          FontSize="24"
-                         materialDesign:HintAssist.Hint="Search By Product Name" />
+                         Text="{Binding SearchItemName , Mode=TwoWay , UpdateSourceTrigger=PropertyChanged}"
+                         materialDesign:HintAssist.Hint="Search By Product Name" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <i:InvokeCommandAction 
+                                Command="{Binding SearchItemCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
             </Grid>
         </Border>
         <DataGrid Grid.Row="1"
             CanUserAddRows="True"
-            SelectionUnit="Cell"
+            CanUserDeleteRows="False"
+            SelectionUnit="FullRow"
             SelectionMode="Extended" 
-                  AutoGenerateColumns="False"
+            AutoGenerateColumns="False"
             Margin="20"
             FontSize="22"
-            ItemsSource="{Binding Path=items}"
+            ItemsSource="{Binding Path=items , Mode=TwoWay}"
+            SelectedItem="{Binding SelectedItem}"
             >
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="AddingNewItem">
+                    <i:InvokeCommandAction 
+                                Command="{Binding AddingItemStartedCommand}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="RowEditEnding">
+                    <i:InvokeCommandAction 
+                                Command="{Binding AddItemCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            
+
             <DataGrid.Columns>
                 <!--<DataGridCheckBoxColumn
                     Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
@@ -62,7 +84,8 @@
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                     <materialDesign:DataGridTextColumn.Binding>
                         <Binding
-                            Path="ItemName">
+                            Path="ItemName"
+                            UpdateSourceTrigger="PropertyChanged">
                         </Binding>
                     </materialDesign:DataGridTextColumn.Binding>
                 </materialDesign:DataGridTextColumn>
@@ -72,7 +95,8 @@
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                     <materialDesign:DataGridTextColumn.Binding>
                         <Binding
-                            Path="ItemPrice">
+                            Path="ItemInstorePrice"
+                            UpdateSourceTrigger="PropertyChanged">
                         </Binding>
                     </materialDesign:DataGridTextColumn.Binding>
                 </materialDesign:DataGridTextColumn>
@@ -82,7 +106,8 @@
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                     <materialDesign:DataGridTextColumn.Binding>
                         <Binding
-                            Path="ItemZomatoPrice">
+                            Path="ItemZomatoPrice"
+                            UpdateSourceTrigger="PropertyChanged">
                         </Binding>
                     </materialDesign:DataGridTextColumn.Binding>
                 </materialDesign:DataGridTextColumn>
@@ -92,14 +117,18 @@
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                     <materialDesign:DataGridTextColumn.Binding>
                         <Binding
-                            Path="ItemSwiggyPrice">
+                            Path="ItemSwiggyPrice"
+                            UpdateSourceTrigger="PropertyChanged">
                         </Binding>
                     </materialDesign:DataGridTextColumn.Binding>
                 </materialDesign:DataGridTextColumn>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button  Style="{StaticResource MaterialDesignIconButton}">
+                            <Button  Style="{StaticResource MaterialDesignIconButton}"
+                                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                              Path=DataContext.DeleteSelectedItem}"
+                                     CommandParameter="{Binding}">
                                 <materialDesign:PackIcon Kind="DeleteEmpty" Width="30" Height="30" />
                             </Button>
                         </DataTemplate>

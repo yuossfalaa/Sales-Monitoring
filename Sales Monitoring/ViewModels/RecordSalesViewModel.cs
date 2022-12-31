@@ -1,17 +1,29 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using Sales_Monitoring.Commands;
 using Sales_Monitoring.SalesMonitoring.Domain.Models;
+using Sales_Monitoring.SalesMonitoring.Domain.Services;
+using Sales_Monitoring.SalesMonitoring.EntityFramework.Services;
+using Sales_Monitoring.SalesMonitoring.EntityFramework;
+using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
+using System.Windows;
 
 namespace Sales_Monitoring.ViewModels
 {
     public class RecordSalesViewModel : ViewModelBase
     {
+        #region BackGround Workers
+        public BackgroundWorker DBGetAll = new BackgroundWorker();
+        #endregion
+
         #region Constructor
         public RecordSalesViewModel()
         {
-            //items = new ObservableCollection<Items>(TestData.getdataItem());
+            //Get info From DB
+            DBGetAll.DoWork += (obj, e) => GetAll();
+            DBGetAll.RunWorkerAsync();
             AddItemCommand = new RelayCommand<Items>(Additem, true);
             RemoveItemCommand = new RelayCommand<Items>(Removeitem, true);
             AddItemToOrderCommand = new RelayCommand<Items>(AddItemToOrder, true);
@@ -28,7 +40,6 @@ namespace Sales_Monitoring.ViewModels
             DiscountLabel = "2.5";
         }
 
-       
         #endregion
 
         #region Commands
@@ -44,6 +55,7 @@ namespace Sales_Monitoring.ViewModels
         #region private objects
         private ObservableCollection<Items> _items { get; set; }
         public ObservableCollection<Items> _order { get; set; }
+
         #endregion
 
         #region Public objects
@@ -83,6 +95,9 @@ namespace Sales_Monitoring.ViewModels
         private string _taxeslabel { get; set; }
         private string _roundofflabel { get; set; }
         private string _discountlabel { get; set; }
+        private Visibility _InstorePriceTextBoxVisibility { get; set; }
+        private Visibility _ZomatoPriceTextBoxVisibility { get; set; }
+        private Visibility _SwiggyPriceTextBoxVisibility { get; set; }
         #endregion
 
         #region Public Variables
@@ -122,7 +137,6 @@ namespace Sales_Monitoring.ViewModels
                 RaisePropertyChanged("StoreName");
             }
         }
-
         public string SearchItemText
         {
             get { return _searchitemtext; }
@@ -167,16 +181,54 @@ namespace Sales_Monitoring.ViewModels
                 RaisePropertyChanged("DiscountLabel");
             }
         }
+        public Visibility InstorePriceTextBoxVisibility
+        {
+            get { return _InstorePriceTextBoxVisibility; }
+            set { _InstorePriceTextBoxVisibility = value; RaisePropertyChanged("InstorePriceTextBoxVisibility"); }
+        }
+        public Visibility ZomatoPriceTextBoxVisibility
+        {
+            get { return _ZomatoPriceTextBoxVisibility; }
+            set { _ZomatoPriceTextBoxVisibility = value; RaisePropertyChanged("ZomatoPriceTextBoxVisibility"); }
+        }
+        public Visibility SwiggyPriceTextBoxVisibility
+        {
+            get { return _SwiggyPriceTextBoxVisibility; }
+            set { _SwiggyPriceTextBoxVisibility = value; RaisePropertyChanged("SwiggyPriceTextBoxVisibility"); }
+        }
 
 
         #endregion
 
         #region Private Methods
+        private void GetAll()
+        {
+            IDataService<Items> GetAllRecord = new GenericDataService<Items>(new SalesMonitoringDbContextFactory());
+            items = new ObservableCollection<Items>(GetAllRecord.GetAll());
+        }
         private string checkStoreName()
         {
-            if (UpdateCurrentViewModelCommand.ViewTypeName == "RecordSales") { return "In Store"; }
-            else if (UpdateCurrentViewModelCommand.ViewTypeName == "RecordSalesZomato") { return "Zomato"; }
-            else { return "Swiggy"; }
+            if (UpdateCurrentViewModelCommand.ViewTypeName == "RecordSales") 
+            {
+                InstorePriceTextBoxVisibility = Visibility.Visible;
+                ZomatoPriceTextBoxVisibility = Visibility.Collapsed;
+                SwiggyPriceTextBoxVisibility = Visibility.Collapsed;
+                return "In Store";
+            }
+            else if (UpdateCurrentViewModelCommand.ViewTypeName == "RecordSalesZomato") 
+            {
+                InstorePriceTextBoxVisibility = Visibility.Collapsed;
+                ZomatoPriceTextBoxVisibility = Visibility.Visible;
+                SwiggyPriceTextBoxVisibility = Visibility.Collapsed;
+                return "Zomato";
+            }
+            else 
+            {
+                InstorePriceTextBoxVisibility = Visibility.Collapsed;
+                ZomatoPriceTextBoxVisibility = Visibility.Collapsed;
+                SwiggyPriceTextBoxVisibility = Visibility.Visible;
+                return "Swiggy";
+            }
         }
         private void SearchItem(string itemname)
         {
