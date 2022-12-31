@@ -20,12 +20,15 @@ namespace Sales_Monitoring.SalesMonitoring.EntityFramework.Services
 
         public T Create(T entity)
         {
-            using(SalesMonitoringDbContext context = _contextFactory.CreateDbContext())
+
+            using (SalesMonitoringDbContext context = _contextFactory.CreateDbContext())
             {
-                EntityEntry<T> createdResult =  context.Set<T>().Add(entity);
-                context.SaveChanges();
-                return createdResult.Entity;
+               
+                    EntityEntry<T> createdResult = context.Set<T>().Add(entity);
+                    context.SaveChanges();
+                    return createdResult.Entity;
             }
+
         }
 
         public bool Delete(T entity)
@@ -44,6 +47,15 @@ namespace Sales_Monitoring.SalesMonitoring.EntityFramework.Services
             using (SalesMonitoringDbContext context = _contextFactory.CreateDbContext())
             {
                 T entity =  context.Set<T>().FirstOrDefault((e) => e.Id == id);
+                return entity;
+            }
+        }
+
+        public Items Get(string name)
+        {
+            using (SalesMonitoringDbContext context = _contextFactory.CreateDbContext())
+            {
+                Items entity = context.Set<Items>().FirstOrDefault((e) => e.ItemName == name);
                 return entity;
             }
         }
