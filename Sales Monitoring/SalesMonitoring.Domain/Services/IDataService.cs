@@ -7,12 +7,12 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Services
 {
     public interface IDataService<T>
     {
-        Task<List<T>> GetAll();
-        Task<List<Order>> GetAllOrdersBetweenDates(DateTime Start, DateTime End);
-        Task<T> Get(int id);
-        Task<T> Create(T entity);
-        Task<T> Update(int id, T entity);
-        Task<bool> Delete(T entity);
+        List<T> GetAll();
+        List<Order> GetAllOrdersBetweenDates(DateTime Start, DateTime End);
+        T Get(int id);
+        T Create(T entity);
+        T Update(int id, T entity);
+        bool Delete(T entity);
 
     }
 }
