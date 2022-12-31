@@ -1,9 +1,4 @@
 ﻿using Sales_Monitoring.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Sales_Monitoring.State.Navigators
@@ -14,7 +9,11 @@ namespace Sales_Monitoring.State.Navigators
         HomeView,
         RecordExpenses,
         RecordSales,
-        ReportView
+        RecordSalesZomato,
+        RecordSalesSwiggy,
+        ReportViewDay,
+        ReportViewWeak,
+        ReportViewMonth,
     }
     public interface INavigator
     {
