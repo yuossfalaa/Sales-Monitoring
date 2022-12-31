@@ -81,7 +81,15 @@
             <Border BorderThickness="2,0,0,0" Margin="0,50,0,50" BorderBrush="#4473c5">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <Label Content="In Store Order" FontSize="26" Margin="80,0,0,20" FontFamily="Segoe UI Bold"/>
+                        <TextBlock FontSize="26" Margin="80,0,0,20" FontFamily="Segoe UI Bold">
+                            <TextBlock.Text>
+                                <Binding Path="StoreName">
+                                    <Binding.StringFormat>
+                                        {0} Order
+                                    </Binding.StringFormat>
+                                </Binding>
+                            </TextBlock.Text>
+                        </TextBlock>
                         <Border Background="#e9ebea" Margin="40,0,40,0" BorderBrush="Gray" BorderThickness="0.3">
                             <StackPanel>
                                 <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Margin="10,0,10,0">
