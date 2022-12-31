@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using System.Windows;
+using System.Collections.Generic;
 
 namespace Sales_Monitoring.ViewModels
 {
@@ -29,7 +30,7 @@ namespace Sales_Monitoring.ViewModels
             AddItemToOrderCommand = new RelayCommand<Items>(AddItemToOrder, true);
             SaveBillCommand = new RelayCommand<ObservableCollection<Order>>(SaveBill, true);
             QuantityTextChangedCommand = new RelayCommand<Items>(QuantityTextChanged, true);
-            SearchTextChangedCommand = new RelayCommand<string>(SearchItem, true);
+            SearchTextChangedCommand = new RelayCommand(SearchItem, true);
             CashSelected = true;
             StoreName = checkStoreName();
 
@@ -38,6 +39,10 @@ namespace Sales_Monitoring.ViewModels
             TaxesLabel = "90";
             RoundoffLabel = "0.30";
             DiscountLabel = "2.5";
+
+
+            order = new Order();
+            order.item = new ObservableCollection<Items>();
         }
 
         #endregion
@@ -54,7 +59,7 @@ namespace Sales_Monitoring.ViewModels
 
         #region private objects
         private ObservableCollection<Items> _items { get; set; }
-        public ObservableCollection<Items> _order { get; set; }
+        public Order _order { get; set; }
 
         #endregion
 
@@ -72,7 +77,7 @@ namespace Sales_Monitoring.ViewModels
 
             }
         }
-        public ObservableCollection<Items> order 
+        public Order order 
         {
             get
             {
@@ -230,10 +235,28 @@ namespace Sales_Monitoring.ViewModels
                 return "Swiggy";
             }
         }
-        private void SearchItem(string itemname)
+        private void SearchItem()
         {
-            
-            
+
+            if (SearchItemText == "" || SearchItemText == null)
+            {
+                items.Clear();
+                DBGetAll.RunWorkerAsync();
+            }
+            else
+            {
+                IDataService<Items> SearchRecord = new GenericDataService<Items>(new SalesMonitoringDbContextFactory());
+
+                if (SearchRecord.Get(SearchItemText) != null)
+                {
+                    items.Clear();
+                    items = new ObservableCollection<Items>();
+                    items.Add(SearchRecord.Get(SearchItemText));
+
+                }
+
+
+            }
         }
         private void Additem(Items Addedorder)
         {
@@ -242,20 +265,21 @@ namespace Sales_Monitoring.ViewModels
  
         private void Removeitem(Items ordertoberemoved)
         {
-            if (ordertoberemoved.Quantity >= 1) ordertoberemoved.Quantity -= 1;
-            if (ordertoberemoved.Quantity <= 0) order.Remove(ordertoberemoved);
+            //if (ordertoberemoved.Quantity >= 1) ordertoberemoved.Quantity -= 1;
+            //if (ordertoberemoved.Quantity <= 0) order.Remove(ordertoberemoved);
         }
         private void QuantityTextChanged(Items ordertoberemoved)
         {
             if (ordertoberemoved.Quantity <= 0)
             {
-                order.Remove(ordertoberemoved);
+                //order.Remove(ordertoberemoved);
 
             }
         }
         private void AddItemToOrder(Items item)
         {
-            order.Add(new Items {ItemName = item.ItemName , Quantity = item.Quantity});
+            item.Quantity = 1;
+            order.item.Add(item);
         }
         /// <summary>
         /// Take Order List 

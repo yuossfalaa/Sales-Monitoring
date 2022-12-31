@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Documents;
 
@@ -8,8 +9,8 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Models
     public class Order : DomainObject
     {
         #region Prop With INotify
-        private List<Items> _item { get; set; }
-        public List<Items> item
+        private ObservableCollection<Items> _item { get; set; }
+        public ObservableCollection<Items> item
         {
             get { return _item; }
             set { _item = value; RaisePropertyChanged("item"); }

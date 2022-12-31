@@ -42,6 +42,7 @@ namespace Sales_Monitoring.ViewModels
             set { _selecteditem = value; RaisePropertyChanged("SelectedItem"); }
         }
         #endregion
+
         public  RecordExpensesViewModel()
         {
             //Commands
@@ -55,7 +56,6 @@ namespace Sales_Monitoring.ViewModels
             RecordtobeAdded = new RecordExpenses();
             RecordtobeAdded.Date = DateTime.Now;
         }
-
 
         #region Private Method
         private void EditSelectedItem()

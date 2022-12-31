@@ -20,7 +20,7 @@
             </Grid.RowDefinitions>
             <Border BorderThickness="0,0,0,2" BorderBrush="#4473c5" Margin="20,0,20,0" Grid.Row="0">
                 <TextBox BorderBrush="#4473c5" BorderThickness="3" 
-                         Text="{Binding SearchItemText ,Mode=TwoWay}"
+                         Text="{Binding SearchItemText ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                          Margin="40,30,40,40" materialDesign:HintAssist.Hint="Search Item" 
                          materialDesign:HintAssist.FontFamily="Segoe UI Bold" 
                          materialDesign:TextFieldAssist.HasFilledTextField="True" 
@@ -28,8 +28,7 @@
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="TextChanged">
                             <i:InvokeCommandAction 
-                                Command="{Binding SearchTextChangedCommand}"
-                                CommandParameter="{Binding SearchItemText}"/>
+                                Command="{Binding SearchTextChangedCommand}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBox>
@@ -122,12 +121,12 @@
                                         <Label Content="Price" FontSize="24" Margin="100,3,0,3"/>
                                     </StackPanel>
                                 </Border>
-                                <ItemsControl  ItemsSource="{Binding order}">
+                                <ItemsControl  ItemsSource="{Binding order.item, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Margin="10,0,10,0">
                                                 <Grid >
-                                                    <Label Content="{Binding item.ItemName}" FontSize="22" HorizontalAlignment="Left" />
+                                                    <Label Content="{Binding ItemName ,Mode=TwoWay}" FontSize="22" HorizontalAlignment="Left" />
                                                     <Button  Style="{StaticResource MaterialDesignIconButton}" 
                                                              Command="{Binding  RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.RemoveItemCommand}"
                                                              CommandParameter="{Binding}"
@@ -135,7 +134,7 @@
                                                              HorizontalAlignment="Left" Margin="170,0,0,0">
                                                         <materialDesign:PackIcon Kind="MinusCircleOutline" Width="30" Height="30"/>
                                                     </Button>
-                                                    <TextBox Text="{Binding Quantity, Mode=TwoWay}"  FontSize="22"  TextAlignment="Center" 
+                                                    <TextBox Text="{Binding Quantity,Mode=TwoWay}"  FontSize="22"  TextAlignment="Center" 
                                                              Width="100"  HorizontalAlignment="Left"  Margin="210,0,0,0">
                                                         <i:Interaction.Triggers>
                                                             <i:EventTrigger EventName="LostFocus">
@@ -152,9 +151,36 @@
                                                              Width="40" Height="40" Foreground="Black" HorizontalAlignment="Left" Margin="310,0,0,0">
                                                         <materialDesign:PackIcon Kind="PlusCircleOutline" Width="30" Height="30"/>
                                                     </Button>
-                                                    <TextBox  Width="100" FontSize="22" Margin="380,4,0,6" HorizontalAlignment="Left" TextAlignment="Center" IsEnabled="{Binding Path=IsChecked, ElementName=EnableEditing}">
+                                                    <TextBox  Width="100" FontSize="22" Margin="380,4,0,6" 
+                                                              HorizontalAlignment="Left" TextAlignment="Center" 
+                                                              Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.InstorePriceTextBoxVisibility}"
+                                                              IsEnabled="{Binding Path=IsChecked, ElementName=EnableEditing}">
                                                         <TextBox.Text>
-                                                            <Binding Path="item.ItemPrice">
+                                                            <Binding Path="ItemInstorePrice">
+                                                                <Binding.StringFormat>
+                                                                    {0}
+                                                                </Binding.StringFormat>
+                                                            </Binding>
+                                                        </TextBox.Text>
+                                                    </TextBox>
+                                                    <TextBox  Width="100" FontSize="22" Margin="380,4,0,6" 
+                                                              HorizontalAlignment="Left" TextAlignment="Center"
+                                                              Visibility="{Binding  RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.ZomatoPriceTextBoxVisibility}"
+                                                              IsEnabled="{Binding Path=IsChecked, ElementName=EnableEditing}">
+                                                        <TextBox.Text>
+                                                            <Binding Path="ItemZomatoPrice">
+                                                                <Binding.StringFormat>
+                                                                    {0}
+                                                                </Binding.StringFormat>
+                                                            </Binding>
+                                                        </TextBox.Text>
+                                                    </TextBox>
+                                                    <TextBox  Width="100" FontSize="22" Margin="380,4,0,6"
+                                                              HorizontalAlignment="Left" TextAlignment="Center"
+                                                              Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.SwiggyPriceTextBoxVisibility}"
+                                                              IsEnabled="{Binding Path=IsChecked, ElementName=EnableEditing}">
+                                                        <TextBox.Text>
+                                                            <Binding Path="ItemSwiggyPrice">
                                                                 <Binding.StringFormat>
                                                                     {0}
                                                                 </Binding.StringFormat>
