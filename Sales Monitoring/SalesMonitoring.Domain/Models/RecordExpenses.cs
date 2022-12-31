@@ -6,7 +6,7 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Models
     {
         public DateTime Date { get; set; }
         public string ItemName { get; set; }
-        public float Amount { get; set; }
+        public double Amount { get; set; }
         public string Mode { get; set; }
     }
 }
