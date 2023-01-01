@@ -11,6 +11,9 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Services
         List<OrderCollection> GetAllOrdersBetweenDates(DateTime Start, DateTime End);
         T Get(int id);
         Items Get(string name);
+        ItemSales GetItemSalesByName(string name);
+        ItemSales GetItemSales(int Itemid);
+        ItemSales ItemsSalesUpdateByName(string name, ItemSales entity);
         T Create(T entity);
         T Update(int id, T entity);
         bool Delete(T entity);

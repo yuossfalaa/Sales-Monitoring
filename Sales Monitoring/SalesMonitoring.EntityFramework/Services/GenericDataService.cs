@@ -78,6 +78,35 @@ namespace Sales_Monitoring.SalesMonitoring.EntityFramework.Services
             }
         }
 
+        public ItemSales GetItemSales(int Itemid)
+        {
+            using (SalesMonitoringDbContext context = _contextFactory.CreateDbContext())
+            {
+                ItemSales entity = context.Set<ItemSales>().FirstOrDefault((e) => e.ItemID == Itemid);
+                return entity;
+            }
+        }
+
+        public ItemSales GetItemSalesByName(string name)
+        {
+            using (SalesMonitoringDbContext context = _contextFactory.CreateDbContext())
+            {
+                ItemSales entity = context.Set<ItemSales>().FirstOrDefault((e) => e.ItemName == name);
+                return entity;
+            }
+        }
+
+        public ItemSales ItemsSalesUpdateByName(string name, ItemSales entity)
+        {
+            using (SalesMonitoringDbContext context = _contextFactory.CreateDbContext())
+            {
+                entity.ItemName = name;
+                context.Set<ItemSales>().Update(entity);
+                context.SaveChanges();
+                return entity;
+            }
+        }
+
         public T Update(int id, T entity)
         {
             using (SalesMonitoringDbContext context = _contextFactory.CreateDbContext())
@@ -88,5 +117,7 @@ namespace Sales_Monitoring.SalesMonitoring.EntityFramework.Services
                 return entity;
             }
         }
+
+       
     }
 }
