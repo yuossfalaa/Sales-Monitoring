@@ -69,11 +69,20 @@ namespace Sales_Monitoring.SalesMonitoring.EntityFramework.Services
             }
         }
 
+        public List<RecordExpenses> GetAllExpensesBetweenDates(DateTime Start, DateTime End)
+        {
+            using (SalesMonitoringDbContext context = _contextFactory.CreateDbContext())
+            {
+                List<RecordExpenses> entities = context.Set<RecordExpenses>().Where(e => e.Date >= Start && e.Date <= End.AddDays(1)).ToList();
+                return entities;
+            }
+        }
+
         public  List<OrderCollection> GetAllOrdersBetweenDates(DateTime Start, DateTime End)
         {
             using (SalesMonitoringDbContext context = _contextFactory.CreateDbContext())
             {
-                List<OrderCollection> entities = context.Set<OrderCollection>().Where(e => e.Date >= Start && e.Date <= End).ToList();
+                List<OrderCollection> entities = context.Set<OrderCollection>().Where(e => e.Date >= Start && e.Date <= End.AddDays(1)).ToList();
                 return entities;
             }
         }

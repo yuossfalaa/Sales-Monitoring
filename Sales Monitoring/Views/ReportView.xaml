@@ -23,9 +23,15 @@
                 Height="50"
                 FontSize="24"
                 materialDesign:HintAssist.Hint="Pick Date"
-                materialDesign:TextFieldAssist.HasClearButton="True"
                 SelectedDate="{Binding DateSelected}"
-                Margin="20,0,20,0"/>
+                Margin="20,0,20,0">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectedDateChanged">
+                        <i:InvokeCommandAction 
+                            Command="{Binding SelectedDateChnagedCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </DatePicker>
             <ComboBox
                 materialDesign:HintAssist.Hint="Type of Report"
                 FontSize="24"
@@ -69,14 +75,11 @@
             <StackPanel Grid.Column="0" >
                 <DataGrid 
                     Visibility="{Binding Visibility_Overallsales}"
-                    ItemsSource="{Binding Path= Orders}"
-                    AutoGenerateColumns="True"
+                    ItemsSource="{Binding Path= orderCollections}"
+                    AutoGenerateColumns="False"
                     CanUserAddRows="False"
                     IsReadOnly="True"
                     SelectionUnit="Cell"
-                    ScrollViewer.CanContentScroll="True" 
-                    ScrollViewer.VerticalScrollBarVisibility="Visible"
-                    ScrollViewer.HorizontalScrollBarVisibility="Visible"
                     SelectionMode="Extended" 
                     Margin="20,20,0,10"
                     FontSize="16"
@@ -187,13 +190,13 @@
                         </materialDesign:DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                <DataGrid Visibility="{Binding Visibility_ProductWiseSales}"
+                <DataGrid 
+                    Visibility="{Binding Visibility_ProductWiseSales}"
+                    ItemsSource="{Binding  Path=ItemSales}"
                     CanUserAddRows="False"
                     IsReadOnly="True"
                     SelectionUnit="Cell"
-                    ScrollViewer.CanContentScroll="True" 
-                    ScrollViewer.VerticalScrollBarVisibility="Visible"
-                    ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                    AutoGenerateColumns="False"
                     SelectionMode="Extended" 
                     Margin="20,20,0,10"
                     FontSize="16"
