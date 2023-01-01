@@ -12,6 +12,22 @@ namespace SalesMonitoring.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Items",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemInstorePrice = table.Column<double>(type: "float", nullable: true),
+                    ItemZomatoPrice = table.Column<double>(type: "float", nullable: true),
+                    ItemSwiggyPrice = table.Column<double>(type: "float", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Items", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ItemSales",
                 columns: table => new
                 {
@@ -31,19 +47,36 @@ namespace SalesMonitoring.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
+                name: "OrderCollection",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Count = table.Column<int>(type: "int", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Count = table.Column<int>(type: "int", nullable: true),
                     Tax = table.Column<double>(type: "float", nullable: true),
                     Discount = table.Column<double>(type: "float", nullable: true),
                     Roundoff = table.Column<double>(type: "float", nullable: true),
                     TotalBill = table.Column<double>(type: "float", nullable: true),
                     Payment = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderCollection", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemInstorePrice = table.Column<double>(type: "float", nullable: true),
+                    ItemZomatoPrice = table.Column<double>(type: "float", nullable: true),
+                    ItemSwiggyPrice = table.Column<double>(type: "float", nullable: true),
+                    Quantity = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -67,32 +100,33 @@ namespace SalesMonitoring.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Items",
+                name: "OrderOrderCollection",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ItemName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ItemInstorePrice = table.Column<double>(type: "float", nullable: true),
-                    ItemZomatoPrice = table.Column<double>(type: "float", nullable: true),
-                    ItemSwiggyPrice = table.Column<double>(type: "float", nullable: true),
-                    Quantity = table.Column<int>(type: "int", nullable: true),
-                    OrderId = table.Column<int>(type: "int", nullable: true)
+                    OrderCollectionId = table.Column<int>(type: "int", nullable: false),
+                    ordersId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Items", x => x.Id);
+                    table.PrimaryKey("PK_OrderOrderCollection", x => new { x.OrderCollectionId, x.ordersId });
                     table.ForeignKey(
-                        name: "FK_Items_Orders_OrderId",
-                        column: x => x.OrderId,
+                        name: "FK_OrderOrderCollection_OrderCollection_OrderCollectionId",
+                        column: x => x.OrderCollectionId,
+                        principalTable: "OrderCollection",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderOrderCollection_Orders_ordersId",
+                        column: x => x.ordersId,
                         principalTable: "Orders",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_OrderId",
-                table: "Items",
-                column: "OrderId");
+                name: "IX_OrderOrderCollection_ordersId",
+                table: "OrderOrderCollection",
+                column: "ordersId");
         }
 
         /// <inheritdoc />
@@ -105,7 +139,13 @@ namespace SalesMonitoring.Migrations
                 name: "ItemSales");
 
             migrationBuilder.DropTable(
+                name: "OrderOrderCollection");
+
+            migrationBuilder.DropTable(
                 name: "RecordExpenses");
+
+            migrationBuilder.DropTable(
+                name: "OrderCollection");
 
             migrationBuilder.DropTable(
                 name: "Orders");

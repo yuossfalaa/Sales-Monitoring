@@ -12,7 +12,7 @@ using Sales_Monitoring.SalesMonitoring.EntityFramework;
 namespace SalesMonitoring.Migrations
 {
     [DbContext(typeof(SalesMonitoringDbContext))]
-    [Migration("20221231200715_init")]
+    [Migration("20230101023729_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -24,6 +24,21 @@ namespace SalesMonitoring.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("OrderOrderCollection", b =>
+                {
+                    b.Property<int>("OrderCollectionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ordersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderCollectionId", "ordersId");
+
+                    b.HasIndex("ordersId");
+
+                    b.ToTable("OrderOrderCollection");
+                });
 
             modelBuilder.Entity("Sales_Monitoring.SalesMonitoring.Domain.Models.ItemSales", b =>
                 {
@@ -80,20 +95,41 @@ namespace SalesMonitoring.Migrations
                     b.Property<double?>("ItemZomatoPrice")
                         .HasColumnType("float");
 
-                    b.Property<int?>("OrderId")
+                    b.HasKey("Id");
+
+                    b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("Sales_Monitoring.SalesMonitoring.Domain.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double?>("ItemInstorePrice")
+                        .HasColumnType("float");
+
+                    b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("ItemSwiggyPrice")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("ItemZomatoPrice")
+                        .HasColumnType("float");
 
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("Items");
+                    b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("Sales_Monitoring.SalesMonitoring.Domain.Models.Order", b =>
+            modelBuilder.Entity("Sales_Monitoring.SalesMonitoring.Domain.Models.OrderCollection", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -127,7 +163,7 @@ namespace SalesMonitoring.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.ToTable("OrderCollection");
                 });
 
             modelBuilder.Entity("Sales_Monitoring.SalesMonitoring.Domain.Models.RecordExpenses", b =>
@@ -157,16 +193,19 @@ namespace SalesMonitoring.Migrations
                     b.ToTable("RecordExpenses");
                 });
 
-            modelBuilder.Entity("Sales_Monitoring.SalesMonitoring.Domain.Models.Items", b =>
+            modelBuilder.Entity("OrderOrderCollection", b =>
                 {
-                    b.HasOne("Sales_Monitoring.SalesMonitoring.Domain.Models.Order", null)
-                        .WithMany("item")
-                        .HasForeignKey("OrderId");
-                });
+                    b.HasOne("Sales_Monitoring.SalesMonitoring.Domain.Models.OrderCollection", null)
+                        .WithMany()
+                        .HasForeignKey("OrderCollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("Sales_Monitoring.SalesMonitoring.Domain.Models.Order", b =>
-                {
-                    b.Navigation("item");
+                    b.HasOne("Sales_Monitoring.SalesMonitoring.Domain.Models.Order", null)
+                        .WithMany()
+                        .HasForeignKey("ordersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
