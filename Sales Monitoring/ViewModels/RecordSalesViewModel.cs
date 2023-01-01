@@ -33,6 +33,7 @@ namespace Sales_Monitoring.ViewModels
             TaxesTextChangedCommand = new RelayCommand(TaxesTextChanged, true);
             RoundoffTextChangedCommand = new RelayCommand(RoundoffText, true);
             DiscountTextChangedCommand = new RelayCommand(DiscountText, true);
+            PriceChangedCommand = new RelayCommand(Pricechange, true);
             CashSelected = true;
             StoreName = checkStoreName();
             TaxesLabel = 0.0;
@@ -41,6 +42,8 @@ namespace Sales_Monitoring.ViewModels
             TotalBill = 0;
             order = new ObservableCollection<Order>();
         }
+
+
 
         #endregion
 
@@ -54,6 +57,7 @@ namespace Sales_Monitoring.ViewModels
         public ICommand RoundoffTextChangedCommand { get; private set; }
         public ICommand DiscountTextChangedCommand { get; private set; }
         public ICommand TaxesTextChangedCommand { get; private set; }
+        public ICommand PriceChangedCommand { get; private set; }
 
         #endregion
 
@@ -285,50 +289,30 @@ namespace Sales_Monitoring.ViewModels
             Order ordertobeadded = new Order();
             ordertobeadded.ItemName = item.ItemName;
             ordertobeadded.Quantity = 1;
-            ordertobeadded.ItemZomatoPrice = item.ItemZomatoPrice;
-            ordertobeadded.ItemInstorePrice = item.ItemInstorePrice;
-            ordertobeadded.ItemSwiggyPrice = item.ItemSwiggyPrice;
             order.Add(ordertobeadded);
             if (StoreName == "In Store")
             {
+                ordertobeadded.Price = item.ItemInstorePrice;
                 TotalBill += item.ItemInstorePrice;
             }
             else if (StoreName == "Zomato")
             {
+                ordertobeadded.Price = item.ItemZomatoPrice;
                 TotalBill += item.ItemZomatoPrice;
             }
             else
             {
+                ordertobeadded.Price = item.ItemSwiggyPrice;
                 TotalBill += item.ItemSwiggyPrice;
             }
         }
         private void QuantityTextChanged(Order ordertoberemoved)
         {
             TotalBill = 0;
-
-            if (StoreName == "In Store")
+            foreach (Order obj in order)
             {
-                foreach(Order obj in order)
-                {
-                    TotalCalculator(obj.Quantity, obj.ItemInstorePrice);
-                }
-
+                TotalCalculator(obj.Quantity, obj.Price);
             }
-            else if (StoreName == "Zomato")
-            {
-                foreach (Order obj in order)
-                {
-                    TotalCalculator(obj.Quantity, obj.ItemZomatoPrice);
-                }
-            }
-            else
-            {
-                foreach (Order obj in order)
-                {
-                    TotalCalculator(obj.Quantity, obj.ItemSwiggyPrice);
-                }
-            }
-
             discountadded = false;
             roundoffadded = false;
             taxesadded = false;
@@ -339,6 +323,21 @@ namespace Sales_Monitoring.ViewModels
             if (ordertoberemoved.Quantity <= 0) order.Remove(ordertoberemoved);
 
 
+        }
+        private void Pricechange()
+        {
+
+            TotalBill = 0;
+            foreach (Order obj in order)
+            {
+                TotalCalculator(obj.Quantity, obj.Price);
+            }
+            discountadded = false;
+            roundoffadded = false;
+            taxesadded = false;
+            DiscountText();
+            RoundoffText();
+            TaxesTextChanged();
         }
         private void DiscountText()
         {
@@ -404,35 +403,13 @@ namespace Sales_Monitoring.ViewModels
         private void Additem(Order Addedorder)
         {
             Addedorder.Quantity++;
-            if (StoreName == "In Store")
-            {
-                TotalCalculator(1, Addedorder.ItemInstorePrice);
-            }
-            else if (StoreName == "Zomato")
-            {
-                TotalCalculator(1, Addedorder.ItemZomatoPrice);
-            }
-            else
-            {
-                TotalCalculator(1, Addedorder.ItemSwiggyPrice);
-            }
+            TotalCalculator(1, Addedorder.Price);
 
         }
         private void Removeitem(Order ordertoberemoved)
         {
-           
-            if (StoreName == "In Store")
-            {
-                TotalCalculator(-1, ordertoberemoved.ItemInstorePrice);
-            }
-            else if (StoreName == "Zomato")
-            {
-                TotalCalculator(-1, ordertoberemoved.ItemZomatoPrice);
-            }
-            else
-            {
-                TotalCalculator(-1, ordertoberemoved.ItemSwiggyPrice);
-            }
+
+            TotalCalculator(-1, ordertoberemoved.Price);
             if (ordertoberemoved.Quantity >= 1) ordertoberemoved.Quantity -= 1;
             if (ordertoberemoved.Quantity <= 0) order.Remove(ordertoberemoved);
         }
@@ -474,18 +451,18 @@ namespace Sales_Monitoring.ViewModels
                 if (StoreName == "In Store")
                 {
                     item.QtyInStore += obj.Quantity;
-                    item.InStoreSales = obj.Quantity * obj.ItemInstorePrice;
+                    item.InStoreSales = obj.Quantity * obj.Price;
 
                 }
                 else if (StoreName == "Zomato")
                 {
                     item.QtyZomato += obj.Quantity;
-                    item.ZomatoSales = obj.Quantity * obj.ItemZomatoPrice;
+                    item.ZomatoSales = obj.Quantity * obj.Price;
                 }
                 else
                 {
                     item.QtySwiggy += obj.Quantity;
-                    item.SwiggySales = obj.Quantity * obj.ItemSwiggyPrice;
+                    item.SwiggySales = obj.Quantity * obj.Price;
                 }
 
                 SaveItemSales.Update(item.Id,item);

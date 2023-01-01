@@ -153,34 +153,17 @@
                                                     </Button>
                                                     <TextBox  Width="100" FontSize="22" Margin="380,4,0,6" 
                                                               HorizontalAlignment="Left" TextAlignment="Center" 
-                                                              Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.InstorePriceTextBoxVisibility}"
                                                               IsEnabled="{Binding Path=IsChecked, ElementName=EnableEditing}">
+                                                        <i:Interaction.Triggers>
+                                                            <i:EventTrigger EventName="LostFocus">
+                                                                <i:InvokeCommandAction 
+                                                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},
+                                                                    Path=DataContext.PriceChangedCommand}" 
+                                                                    CommandParameter="{Binding}"/>
+                                                            </i:EventTrigger>
+                                                        </i:Interaction.Triggers>
                                                         <TextBox.Text>
-                                                            <Binding Path="ItemInstorePrice">
-                                                                <Binding.StringFormat>
-                                                                    {0}
-                                                                </Binding.StringFormat>
-                                                            </Binding>
-                                                        </TextBox.Text>
-                                                    </TextBox>
-                                                    <TextBox  Width="100" FontSize="22" Margin="380,4,0,6" 
-                                                              HorizontalAlignment="Left" TextAlignment="Center"
-                                                              Visibility="{Binding  RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.ZomatoPriceTextBoxVisibility}"
-                                                              IsEnabled="{Binding Path=IsChecked, ElementName=EnableEditing}">
-                                                        <TextBox.Text>
-                                                            <Binding Path="ItemZomatoPrice">
-                                                                <Binding.StringFormat>
-                                                                    {0}
-                                                                </Binding.StringFormat>
-                                                            </Binding>
-                                                        </TextBox.Text>
-                                                    </TextBox>
-                                                    <TextBox  Width="100" FontSize="22" Margin="380,4,0,6"
-                                                              HorizontalAlignment="Left" TextAlignment="Center"
-                                                              Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.SwiggyPriceTextBoxVisibility}"
-                                                              IsEnabled="{Binding Path=IsChecked, ElementName=EnableEditing}">
-                                                        <TextBox.Text>
-                                                            <Binding Path="ItemSwiggyPrice">
+                                                            <Binding Path="Price">
                                                                 <Binding.StringFormat>
                                                                     {0}
                                                                 </Binding.StringFormat>
