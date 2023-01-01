@@ -1,32 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows.Documents;
 
 namespace Sales_Monitoring.SalesMonitoring.Domain.Models
 {
     public class Order : DomainObject
     {
         #region Prop With INotify
-        private ObservableCollection<Items> _item { get; set; }
-        public ObservableCollection<Items> item
+        public string ItemName { get; set; }
+        public double? ItemInstorePrice { get; set; }
+        public double? ItemZomatoPrice { get; set; }
+        public double? ItemSwiggyPrice { get; set; }
+        private int? _quantity { get; set; }
+        public int? Quantity
         {
-            get { return _item; }
-            set { _item = value; RaisePropertyChanged("item"); }
+            get { return _quantity; }
+            set
+            {
+                _quantity = value;
+                RaisePropertyChanged("Quantity");
+            }
         }
-       
         #endregion
-        public DateTime? Date { get; set; } 
-        public string? Type { get; set; }
-        public int? Count { get; set; }
-        public double? Tax { get; set; }
-        public double? Discount { get; set; }
-        public double? Roundoff { get; set; }
-        public double? TotalBill { get; set; }
-        public string? Payment { get; set; }
-
-
         #region RaisePropertyChanged
         internal void RaisePropertyChanged(string prop)
         {
