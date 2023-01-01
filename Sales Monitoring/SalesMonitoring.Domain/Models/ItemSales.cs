@@ -8,6 +8,7 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Models
 {
     public class ItemSales : DomainObject
     {
+        public int? ItemID { get; set; }
         public string? ItemName { get; set; }
         public int? QtyInStore { get; set; }
         public double? InStoreSales { get; set; }
