@@ -105,12 +105,30 @@ namespace Sales_Monitoring.ViewModels
         }
         private void AddItem()
         {
+            IDataService<ItemSales> AddItemSalesRecord = new GenericDataService<ItemSales>(new SalesMonitoringDbContextFactory());
+            IDataService<ItemSales> EditItemSalesRecord = new GenericDataService<ItemSales>(new SalesMonitoringDbContextFactory());
+            IDataService<Items> AddItemRecord = new GenericDataService<Items>(new SalesMonitoringDbContextFactory());
+            IDataService<Items> EditRecord = new GenericDataService<Items>(new SalesMonitoringDbContextFactory());
+
             if (_isaddingitems)
             {
                 try
                 {
-                    IDataService<Items> AddItemRecord = new GenericDataService<Items>(new SalesMonitoringDbContextFactory());
                     AddItemRecord.Create(SelectedItem);
+
+
+                    Items id = AddItemRecord.Get(SelectedItem.ItemName);
+                    ItemSales itemSales= new ItemSales();
+                    itemSales.ItemID = id.Id;
+                    itemSales.ItemName = SelectedItem.ItemName;
+                    itemSales.QtyInStore = 0;
+                    itemSales.InStoreSales = 0;
+                    itemSales.QtyZomato = 0;
+                    itemSales.ZomatoSales = 0;
+                    itemSales.QtySwiggy = 0;
+                    itemSales.SwiggySales = 0;
+
+                    AddItemSalesRecord.Create(itemSales);
                 }
                 catch { }
 
@@ -124,8 +142,12 @@ namespace Sales_Monitoring.ViewModels
                 if (SelectedItem.ItemZomatoPrice == null) SelectedItem.ItemZomatoPrice = 0;
                 try
                 {
-                    IDataService<Items> EditRecord = new GenericDataService<Items>(new SalesMonitoringDbContextFactory());
                     EditRecord.Update(SelectedItem.Id, SelectedItem);
+
+                    ItemSales itemSales = EditItemSalesRecord.GetItemSales(SelectedItem.Id);
+                    itemSales.ItemName=SelectedItem.ItemName;
+                    EditItemSalesRecord.Update(itemSales.Id, itemSales);
+
                 }
                 catch { }
                 _isaddingitems = false;
