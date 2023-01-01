@@ -48,6 +48,9 @@ namespace SalesMonitoring.Migrations
                     b.Property<double?>("InStoreSales")
                         .HasColumnType("float");
 
+                    b.Property<int?>("ItemID")
+                        .HasColumnType("int");
+
                     b.Property<string>("ItemName")
                         .HasColumnType("nvarchar(max)");
 

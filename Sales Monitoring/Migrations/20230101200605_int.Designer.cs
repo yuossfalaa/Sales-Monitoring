@@ -12,8 +12,8 @@ using Sales_Monitoring.SalesMonitoring.EntityFramework;
 namespace SalesMonitoring.Migrations
 {
     [DbContext(typeof(SalesMonitoringDbContext))]
-    [Migration("20230101023729_init")]
-    partial class init
+    [Migration("20230101200605_int")]
+    partial class @int
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,9 @@ namespace SalesMonitoring.Migrations
 
                     b.Property<double?>("InStoreSales")
                         .HasColumnType("float");
+
+                    b.Property<int?>("ItemID")
+                        .HasColumnType("int");
 
                     b.Property<string>("ItemName")
                         .HasColumnType("nvarchar(max)");
