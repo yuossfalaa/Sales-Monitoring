@@ -8,7 +8,7 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Services
     public interface IDataService<T>
     {
         List<T> GetAll();
-        List<Order> GetAllOrdersBetweenDates(DateTime Start, DateTime End);
+        List<OrderCollection> GetAllOrdersBetweenDates(DateTime Start, DateTime End);
         T Get(int id);
         Items Get(string name);
         T Create(T entity);
