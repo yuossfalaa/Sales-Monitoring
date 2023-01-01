@@ -108,17 +108,11 @@ namespace SalesMonitoring.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double?>("ItemInstorePrice")
-                        .HasColumnType("float");
-
                     b.Property<string>("ItemName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("ItemSwiggyPrice")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("ItemZomatoPrice")
+                    b.Property<double?>("Price")
                         .HasColumnType("float");
 
                     b.Property<int?>("Quantity")

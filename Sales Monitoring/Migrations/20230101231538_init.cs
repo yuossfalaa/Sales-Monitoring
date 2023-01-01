@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SalesMonitoring.Migrations
 {
     /// <inheritdoc />
-    public partial class @int : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -74,9 +74,7 @@ namespace SalesMonitoring.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ItemName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ItemInstorePrice = table.Column<double>(type: "float", nullable: true),
-                    ItemZomatoPrice = table.Column<double>(type: "float", nullable: true),
-                    ItemSwiggyPrice = table.Column<double>(type: "float", nullable: true),
+                    Price = table.Column<double>(type: "float", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
