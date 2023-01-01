@@ -22,13 +22,6 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Models
             }
         }
         #endregion
-        #region RaisePropertyChanged
-        internal void RaisePropertyChanged(string prop)
-        {
-            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-        #endregion
 
 
     }
