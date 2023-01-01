@@ -121,7 +121,7 @@
                                         <Label Content="Price" FontSize="24" Margin="100,3,0,3"/>
                                     </StackPanel>
                                 </Border>
-                                <ItemsControl  ItemsSource="{Binding order.item, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                                <ItemsControl  ItemsSource="{Binding Path=order, Mode=TwoWay}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Margin="10,0,10,0">
@@ -130,6 +130,7 @@
                                                     <Button  Style="{StaticResource MaterialDesignIconButton}" 
                                                              Command="{Binding  RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.RemoveItemCommand}"
                                                              CommandParameter="{Binding}"
+                                                             IsEnabled="False"
                                                              Width="40" Height="40" Foreground="Black" 
                                                              HorizontalAlignment="Left" Margin="170,0,0,0">
                                                         <materialDesign:PackIcon Kind="MinusCircleOutline" Width="30" Height="30"/>
@@ -148,6 +149,7 @@
                                                     <Button  Style="{StaticResource MaterialDesignIconButton}" 
                                                              Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},  Path=DataContext.AddItemCommand}"
                                                              CommandParameter="{Binding}"
+                                                             IsEnabled="False"
                                                              Width="40" Height="40" Foreground="Black" HorizontalAlignment="Left" Margin="310,0,0,0">
                                                         <materialDesign:PackIcon Kind="PlusCircleOutline" Width="30" Height="30"/>
                                                     </Button>
@@ -202,18 +204,43 @@
                                 <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Margin="10,0,10,0">
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="Taxes" FontSize="22" Margin="0,5,0,5"/>
-                                        <Label Content="{Binding TaxesLabel}" FontSize="22" Margin="357,5,0,5"/>
+                                        <TextBox Text="{Binding TaxesLabel , Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged, Delay=500}" FontSize="22" Margin="357,5,0,5">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="LostFocus">
+                                                    <i:InvokeCommandAction 
+                                                     Command="{Binding TaxesTextChangedCommand}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </TextBox>
                                     </StackPanel>
                                 </Border>
                                 <Border BorderBrush="Gray" BorderThickness="0,0,0,0" Margin="10,0,10,0">
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="Roundoff" FontSize="22" Margin="0,5,0,5"/>
-                                        <Label Content="{Binding RoundoffLabel}" FontSize="22" Margin="320,5,0,5"/>
+                                        <TextBox Text="{Binding RoundoffLabel, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, Delay=500}" FontSize="22" Margin="320,5,0,5">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="LostFocus">
+                                                    <i:InvokeCommandAction 
+                                                     Command="{Binding RoundoffTextChangedCommand}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </TextBox>
                                     </StackPanel>
                                 </Border>
                                 <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
                                     <Label Content="Discount" FontSize="22" FontFamily="Segoe UI Bold"  Margin="0,5,0,5"/>
-                                    <Label Content="{Binding DiscountLabel}" FontSize="22" Margin="320,5,0,5"/>
+                                    <TextBox Text="{Binding DiscountLabel, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged, Delay=500}" FontSize="22" Margin="318,5,0,5">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="LostFocus">
+                                                <i:InvokeCommandAction 
+                                                     Command="{Binding DiscountTextChangedCommand}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
+                                    <Label Content="Total" FontSize="22" FontFamily="Segoe UI Bold"  Margin="0,5,0,5"/>
+                                    <Label Content="{Binding TotalBill, Mode=TwoWay}" FontSize="22" Margin="355,5,0,5"/>
                                 </StackPanel>
                                 <Grid  Margin="10,0,10,0">
                                     <StackPanel HorizontalAlignment="Center"  Margin="0,0,0,0" Orientation="Horizontal">
@@ -234,7 +261,6 @@
                                 <Button Margin="10,20,10,10" BorderThickness="0"
                                 Style="{StaticResource MaterialDesignFlatMidBgButton}"
                                 Command="{Binding SaveBillCommand}"
-                                CommandParameter="{Binding order}"
                                 Content="Save Bill" Height="60" FontSize="26"/>
 
                             </StackPanel>

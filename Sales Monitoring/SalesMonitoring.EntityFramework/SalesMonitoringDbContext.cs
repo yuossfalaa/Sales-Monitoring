@@ -14,7 +14,7 @@ namespace Sales_Monitoring.SalesMonitoring.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.Entity<OrderCollection>().HasMany(a => a.orders).WithMany();
             base.OnModelCreating(modelBuilder);
         }
 

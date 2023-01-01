@@ -10,6 +10,8 @@ using System.ComponentModel;
 using System.Windows.Input;
 using System.Windows;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Sales_Monitoring.ViewModels
 {
@@ -25,24 +27,22 @@ namespace Sales_Monitoring.ViewModels
             //Get info From DB
             DBGetAll.DoWork += (obj, e) => GetAll();
             DBGetAll.RunWorkerAsync();
-            AddItemCommand = new RelayCommand<Items>(Additem, true);
-            RemoveItemCommand = new RelayCommand<Items>(Removeitem, true);
+            AddItemCommand = new RelayCommand<Order>(Additem);
+            RemoveItemCommand = new RelayCommand<Order>(Removeitem);
             AddItemToOrderCommand = new RelayCommand<Items>(AddItemToOrder, true);
-            SaveBillCommand = new RelayCommand<ObservableCollection<Order>>(SaveBill, true);
-            QuantityTextChangedCommand = new RelayCommand<Items>(QuantityTextChanged, true);
+            SaveBillCommand = new RelayCommand(SaveBill, true);
+            QuantityTextChangedCommand = new RelayCommand<Order>(QuantityTextChanged, true);
             SearchTextChangedCommand = new RelayCommand(SearchItem, true);
+            TaxesTextChangedCommand = new RelayCommand(TaxesTextChanged, true);
+            RoundoffTextChangedCommand = new RelayCommand(RoundoffText, true);
+            DiscountTextChangedCommand = new RelayCommand(DiscountText, true);
             CashSelected = true;
             StoreName = checkStoreName();
-
-            //For Example
-            //Should implement function to calculate this 
-            TaxesLabel = "90";
-            RoundoffLabel = "0.30";
-            DiscountLabel = "2.5";
-
-
-            order = new Order();
-            order.item = new ObservableCollection<Items>();
+            TaxesLabel = 0.0;
+            RoundoffLabel = 0.0;
+            DiscountLabel = 0.0;
+            TotalBill = 0;
+            order = new ObservableCollection<Order>();
         }
 
         #endregion
@@ -54,12 +54,15 @@ namespace Sales_Monitoring.ViewModels
         public ICommand SaveBillCommand { get; private set; }
         public ICommand QuantityTextChangedCommand { get; private set; }
         public ICommand SearchTextChangedCommand { get; private set; }
+        public ICommand RoundoffTextChangedCommand { get; private set; }
+        public ICommand DiscountTextChangedCommand { get; private set; }
+        public ICommand TaxesTextChangedCommand { get; private set; }
 
         #endregion
 
         #region private objects
         private ObservableCollection<Items> _items { get; set; }
-        public Order _order { get; set; }
+        public ObservableCollection<Order> _order { get; set; }
 
         #endregion
 
@@ -77,7 +80,7 @@ namespace Sales_Monitoring.ViewModels
 
             }
         }
-        public Order order 
+        public ObservableCollection<Order> order 
         {
             get
             {
@@ -97,9 +100,17 @@ namespace Sales_Monitoring.ViewModels
         private bool _upi_gpayselected { get; set; }
         private string _storename { get; set; }
         private string _searchitemtext { get; set; }
-        private string _taxeslabel { get; set; }
-        private string _roundofflabel { get; set; }
-        private string _discountlabel { get; set; }
+        private double _taxeslabel { get; set; }
+        private double _roundofflabel { get; set; }
+        private double _discountlabel { get; set; }
+        private double? _TotalBill { get; set; }
+        private bool taxesadded = false;
+        private bool discountadded = false;
+        private bool roundoffadded = false;
+        private double taxesamount=0;
+        private double discountamount=0;
+        private double roundoffamount=0;
+
         private Visibility _InstorePriceTextBoxVisibility { get; set; }
         private Visibility _ZomatoPriceTextBoxVisibility { get; set; }
         private Visibility _SwiggyPriceTextBoxVisibility { get; set; }
@@ -149,41 +160,55 @@ namespace Sales_Monitoring.ViewModels
             {
                 _searchitemtext = value;
                 RaisePropertyChanged("SearchItemText");
-                if (SearchItemText == "")
-                {
-                    GetAllITems();
-                }
-                else if (SearchItemText != "")
-                {
-                    SearchDB(SearchItemText);
-                }
+                
             }
         }
-        public string TaxesLabel
+        public double TaxesLabel
         {
             get { return _taxeslabel; }
             set
             {
-                _taxeslabel = value;
-                RaisePropertyChanged("TaxesLabel");
+                if (_taxeslabel != value)
+                {
+                    _taxeslabel = value;
+                    RaisePropertyChanged("TaxesLabel");
+                }
+
             }
         } 
-        public string RoundoffLabel
+        public double RoundoffLabel
         {
             get { return _roundofflabel; }
             set
             {
-                _roundofflabel = value;
-                RaisePropertyChanged("RoundoffLabel");
+                if (_roundofflabel != value)
+                {
+                    _roundofflabel = value;
+                    RaisePropertyChanged("RoundoffLabel");
+                }
+
             }
         } 
-        public string DiscountLabel
+        public double DiscountLabel
         {
             get { return _discountlabel; }
             set
             {
-                _discountlabel = value;
-                RaisePropertyChanged("DiscountLabel");
+                if (_discountlabel != value)
+                {
+                    _discountlabel = value;
+                    RaisePropertyChanged("DiscountLabel");
+                }
+                
+            }
+        }
+        public double? TotalBill
+        {
+            get { return _TotalBill; }
+            set
+            {
+                _TotalBill = value;
+                RaisePropertyChanged("TotalBill");
             }
         }
         public Visibility InstorePriceTextBoxVisibility
@@ -258,58 +283,182 @@ namespace Sales_Monitoring.ViewModels
 
             }
         }
-        private void Additem(Items Addedorder)
-        {
-            Addedorder.Quantity += 1;
-        }
- 
-        private void Removeitem(Items ordertoberemoved)
-        {
-            //if (ordertoberemoved.Quantity >= 1) ordertoberemoved.Quantity -= 1;
-            //if (ordertoberemoved.Quantity <= 0) order.Remove(ordertoberemoved);
-        }
-        private void QuantityTextChanged(Items ordertoberemoved)
-        {
-            if (ordertoberemoved.Quantity <= 0)
-            {
-                //order.Remove(ordertoberemoved);
-
-            }
-        }
         private void AddItemToOrder(Items item)
         {
-            item.Quantity = 1;
-            order.item.Add(item);
+            Order ordertobeadded = new Order();
+            ordertobeadded.ItemName = item.ItemName;
+            ordertobeadded.Quantity = 1;
+            ordertobeadded.ItemZomatoPrice = item.ItemZomatoPrice;
+            ordertobeadded.ItemInstorePrice = item.ItemInstorePrice;
+            ordertobeadded.ItemSwiggyPrice = item.ItemSwiggyPrice;
+            order.Add(ordertobeadded);
+            if (StoreName == "In Store")
+            {
+                TotalBill += item.ItemInstorePrice;
+            }
+            else if (StoreName == "Zomato")
+            {
+                TotalBill += item.ItemZomatoPrice;
+            }
+            else
+            {
+                TotalBill += item.ItemSwiggyPrice;
+            }
         }
-        /// <summary>
-        /// Take Order List 
-        /// then Send it To The DB
-        /// </summary>
-        /// <param name="order"></param>
-        private void SaveBill(ObservableCollection<Order> order)
+        private void QuantityTextChanged(Order ordertoberemoved)
         {
-            //Write Logic To Save Here 
+
+            if (ordertoberemoved.Quantity <= 0)
+            {
+                TotalBill = 0;
+                discountadded = false;
+                roundoffadded = false;
+                taxesadded = false;
+                DiscountText();
+                RoundoffText();
+                TaxesTextChanged();
+                order.Remove(ordertoberemoved);
+            }
+            else
+            {
+                TotalBill = 0;
+                if (StoreName == "In Store")
+                {
+                    TotalBill += (double)ordertoberemoved.Quantity * ordertoberemoved.ItemInstorePrice;
+                    discountadded = false;
+                    roundoffadded = false;
+                    taxesadded = false;
+                    DiscountText();
+                    RoundoffText(); 
+                    TaxesTextChanged();
+                }
+                else if (StoreName == "Zomato")
+                {
+                    TotalBill += (double)ordertoberemoved.Quantity * ordertoberemoved.ItemZomatoPrice;
+                    discountadded = false;
+                    roundoffadded = false;
+                    taxesadded = false;
+                    DiscountText();
+                    RoundoffText();
+                    TaxesTextChanged();
+                }
+                else
+                {
+                    TotalBill += (double)ordertoberemoved.Quantity * ordertoberemoved.ItemSwiggyPrice;
+                    discountadded = false;
+                    roundoffadded = false;
+                    taxesadded = false;
+                    DiscountText();
+                    RoundoffText();
+                    TaxesTextChanged();
+                }
+
+
+            }
+
         }
-        /// <summary>
-        /// Search Db For Item And Send The Item To ObservableCollection<Items> items
-        /// use the items Object To Search the Db
-        /// Clear ObservableCollection<Items> items using items.Clear(); before next Step
-        /// Set ObservableCollection<Items> items to the Result Comming from DB
-        /// </summary>
-        /// <param name="ItemName"></param>
-        private void SearchDB(string ItemName)
+        private void DiscountText()
         {
-            Items item = new Items();
-            item.ItemName = ItemName;
+            if (discountadded)
+            {
+                TotalBill += discountamount;
+                TotalBill -= DiscountLabel;
+                discountamount = DiscountLabel;
+                discountadded = true;
+            }
+            else 
+            {
+                TotalBill -= DiscountLabel;
+                discountamount = DiscountLabel;
+                discountadded = true;
+            }
+
+
+
+        }
+
+        private void RoundoffText()
+        {
+            if (roundoffadded)
+            {
+                TotalBill += roundoffamount;
+                TotalBill -= RoundoffLabel;
+                roundoffamount = RoundoffLabel;
+                roundoffadded = true;
+            }
+            else
+            {
+                TotalBill -= RoundoffLabel;
+                roundoffamount = RoundoffLabel;
+                roundoffadded = true;
+            }
+
+        }
+
+        private void TaxesTextChanged()
+        {
+            if (taxesadded)
+            {
+                TotalBill -= taxesamount;
+                TotalBill += TaxesLabel;
+                taxesamount = TaxesLabel;
+                taxesadded = true;
+            }
+            else
+            {
+                TotalBill += TaxesLabel;
+                taxesamount =TaxesLabel;
+                taxesadded = true;
+            }
+        }
+
+
+        private void Additem(Order Addedorder)
+        {
+            Addedorder.Quantity++;
+        }
+        private void Removeitem(Order ordertoberemoved)
+        {
+                if (ordertoberemoved.Quantity >= 1) ordertoberemoved.Quantity -= 1;
+                if (ordertoberemoved.Quantity <= 0) order.Remove(ordertoberemoved);
+        }
         
-        }
-        /// <summary>
-        /// Get All Items From Db As A list Then Set ObservableCollection<Items> items to That List
-        /// Set ObservableCollection<Items> items to the Result Comming from DB
-        /// </summary>
-        private void GetAllITems()
-        {            
-            
+        private void SaveBill()
+        {
+            IDataService<OrderCollection> SaveOrder = new GenericDataService<OrderCollection>(new SalesMonitoringDbContextFactory());
+            OrderCollection ordercollection = new OrderCollection();
+            ordercollection.orders = order;
+            ordercollection.Count = order.Count;
+            ordercollection.Date= DateTime.Now;
+            ordercollection.Type = StoreName;
+            ordercollection.Tax = TaxesLabel;
+            ordercollection.Discount = DiscountLabel;
+            ordercollection.Roundoff = RoundoffLabel;
+            ordercollection.TotalBill = TotalBill;
+
+            if (CardSelected)
+            {
+                ordercollection.Payment = "Card";
+
+            }
+            else if (CashSelected)
+            {
+                ordercollection.Payment = "Cash";
+            }
+            else if (UPI_GPAYSelected)
+            {
+                ordercollection.Payment = "UPI/GPAY";
+
+            }
+
+            SaveOrder.Create(ordercollection);
+            //Cleaning
+            TaxesLabel = 0;
+            DiscountLabel=0;
+            RoundoffLabel = 0; 
+            TotalBill=0;
+            order.Clear();
+
         }
         #endregion
 
