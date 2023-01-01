@@ -8,9 +8,7 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Models
     {
         #region Prop With INotify
         public string ItemName { get; set; }
-        public double? ItemInstorePrice { get; set; }
-        public double? ItemZomatoPrice { get; set; }
-        public double? ItemSwiggyPrice { get; set; }
+        public double? Price { get; set; }
         private int? _quantity { get; set; }
         public int? Quantity
         {
