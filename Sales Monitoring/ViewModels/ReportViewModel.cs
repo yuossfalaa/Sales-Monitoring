@@ -1,5 +1,4 @@
-﻿using MaterialDesignThemes.Wpf;
-using Sales_Monitoring.Commands;
+﻿using Sales_Monitoring.Commands;
 using Sales_Monitoring.SalesMonitoring.Domain.Models;
 using Sales_Monitoring.SalesMonitoring.Domain.Services;
 using Sales_Monitoring.SalesMonitoring.EntityFramework.Services;
@@ -10,8 +9,10 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.Generic;
-using System.Windows.Controls;
+using Microsoft.Win32;
+using ServiceStack.Text;
+using System.Linq;
+using System.IO;
 
 namespace Sales_Monitoring.ViewModels
 {
@@ -23,6 +24,7 @@ namespace Sales_Monitoring.ViewModels
         #region Commands
         public ICommand SelectedDateChnagedCommand { get; private set; }
         public ICommand SelectedStoreTypeChnagedCommand { get; private set; }
+        public ICommand ExportCommand { get; private set; }
 
         #endregion
         #region Private Variables
@@ -59,6 +61,7 @@ namespace Sales_Monitoring.ViewModels
             get { return _ItemSales; }
             set { _ItemSales = value; RaisePropertyChanged("ItemSales");}
         }
+        public ObservableCollection<OrderCollecionCSV> OCCSV = new ObservableCollection<OrderCollecionCSV>();
         #endregion
         #region Public Variables
         public bool ProductWiseSales
@@ -159,6 +162,7 @@ namespace Sales_Monitoring.ViewModels
             //commands
             SelectedDateChnagedCommand = new RelayCommand(SelectedDateChanged);
             SelectedStoreTypeChnagedCommand = new RelayCommand(SelectedStoreTypeChnaged);
+            ExportCommand = new RelayCommand(Export);
             DateSelected = DateSelectedView();
             //Get info From DB
             GetAll();
@@ -167,10 +171,59 @@ namespace Sales_Monitoring.ViewModels
 
 
         }
-
-
         #endregion
         #region Private Method 
+        private void Export()
+        {
+
+            var sfd = new SaveFileDialog { Filter = "CSV|*.csv", FileName="Expenses",  AddExtension = true };
+            if (sfd.ShowDialog().Value)
+            {
+                string dirPath = sfd.FileName;
+                string csv = CsvSerializer.SerializeToCsv(Expenses.ToList());
+                File.WriteAllText(dirPath, csv);
+            }
+            sfd = new SaveFileDialog { Filter = "CSV|*.csv", FileName = "Product Sales", AddExtension = true };
+            if (sfd.ShowDialog().Value)
+            {
+                string dirPath = sfd.FileName;
+                string csv = CsvSerializer.SerializeToCsv(ItemSales.ToList());
+                File.WriteAllText(dirPath, csv);
+            }
+            sfd = new SaveFileDialog { Filter = "CSV|*.csv", FileName = "Overall Sales", AddExtension = true };
+            if (sfd.ShowDialog().Value)
+            {
+                string dirPath = sfd.FileName;
+                OrderCSVBuilder();
+                string csv = CsvSerializer.SerializeToCsv(OCCSV.ToList());
+                File.WriteAllText(dirPath, csv);
+            }
+
+
+        }
+        private void OrderCSVBuilder()
+        {
+            foreach (OrderCollection e in orderCollections)
+            {
+                foreach (Order obj in e.orders)
+                {
+                    OrderCollecionCSV Temp = new OrderCollecionCSV();
+                    Temp.ItemName = obj.ItemName;
+                    Temp.Price= obj.Price;
+                    Temp.Quantity= obj.Quantity;
+                    Temp.Count = e.Count;
+                    Temp.Date = e.Date;
+                    Temp.Type = e.Type;
+                    Temp.Tax = e.Tax;
+                    Temp.Discount = e.Discount;
+                    Temp.Roundoff = e.Roundoff;
+                    Temp.TotalBill = e.TotalBill;
+                    Temp.Payment = e.Payment;
+                    OCCSV.Add(Temp);
+                }
+        
+            }
+        }
         private void SelectedStoreTypeChnaged()
         {
             GetallOrder();
@@ -265,4 +318,5 @@ namespace Sales_Monitoring.ViewModels
         #endregion
 
     }
+    
 }

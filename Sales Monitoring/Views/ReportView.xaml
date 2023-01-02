@@ -65,7 +65,8 @@
                 Style="{StaticResource MaterialDesignFlatDarkBgButton}"
                 Margin="150,0,20,0"
                 Height="50"
-                Width="180">
+                Width="180"
+                Command="{Binding ExportCommand}">
                 <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="ExportVariant" Height="40" Width="50"/>
                     <Label Content="Export" FontSize="24" Foreground="White" Height="60"/>
