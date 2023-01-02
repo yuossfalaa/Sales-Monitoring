@@ -21,6 +21,8 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Models
         }
         #endregion
 
+        public int? OrderCollectionId { get; set; }
+        public OrderCollection? OrderCollection { get; set; }
 
     }
 }

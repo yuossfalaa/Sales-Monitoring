@@ -6,7 +6,13 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Models
 {
     public class OrderCollection : DomainObject
     {
-        public ObservableCollection<Order> orders { get; set; }
+        private ObservableCollection<Order> _orders;
+        public ObservableCollection<Order> orders
+        {
+            get { return _orders; }
+            set { _orders = value; RaisePropertyChanged("orders"); }
+        }
+        
         public int? Count { get; set; }
         public DateTime? Date { get; set; }
         public string? Type { get; set; }
