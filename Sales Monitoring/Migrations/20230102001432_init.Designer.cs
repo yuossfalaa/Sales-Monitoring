@@ -12,7 +12,7 @@ using Sales_Monitoring.SalesMonitoring.EntityFramework;
 namespace SalesMonitoring.Migrations
 {
     [DbContext(typeof(SalesMonitoringDbContext))]
-    [Migration("20230101231538_init")]
+    [Migration("20230102001432_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -24,21 +24,6 @@ namespace SalesMonitoring.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("OrderOrderCollection", b =>
-                {
-                    b.Property<int>("OrderCollectionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ordersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderCollectionId", "ordersId");
-
-                    b.HasIndex("ordersId");
-
-                    b.ToTable("OrderOrderCollection");
-                });
 
             modelBuilder.Entity("Sales_Monitoring.SalesMonitoring.Domain.Models.ItemSales", b =>
                 {
@@ -115,6 +100,9 @@ namespace SalesMonitoring.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("OrderCollectionId")
+                        .HasColumnType("int");
+
                     b.Property<double?>("Price")
                         .HasColumnType("float");
 
@@ -122,6 +110,8 @@ namespace SalesMonitoring.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderCollectionId");
 
                     b.ToTable("Orders");
                 });
@@ -190,19 +180,18 @@ namespace SalesMonitoring.Migrations
                     b.ToTable("RecordExpenses");
                 });
 
-            modelBuilder.Entity("OrderOrderCollection", b =>
+            modelBuilder.Entity("Sales_Monitoring.SalesMonitoring.Domain.Models.Order", b =>
                 {
-                    b.HasOne("Sales_Monitoring.SalesMonitoring.Domain.Models.OrderCollection", null)
-                        .WithMany()
-                        .HasForeignKey("OrderCollectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Sales_Monitoring.SalesMonitoring.Domain.Models.OrderCollection", "OrderCollection")
+                        .WithMany("orders")
+                        .HasForeignKey("OrderCollectionId");
 
-                    b.HasOne("Sales_Monitoring.SalesMonitoring.Domain.Models.Order", null)
-                        .WithMany()
-                        .HasForeignKey("ordersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("OrderCollection");
+                });
+
+            modelBuilder.Entity("Sales_Monitoring.SalesMonitoring.Domain.Models.OrderCollection", b =>
+                {
+                    b.Navigation("orders");
                 });
 #pragma warning restore 612, 618
         }

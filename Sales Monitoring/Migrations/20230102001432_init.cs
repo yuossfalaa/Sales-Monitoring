@@ -68,21 +68,6 @@ namespace SalesMonitoring.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ItemName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: true),
-                    Quantity = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RecordExpenses",
                 columns: table => new
                 {
@@ -99,33 +84,30 @@ namespace SalesMonitoring.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderOrderCollection",
+                name: "Orders",
                 columns: table => new
                 {
-                    OrderCollectionId = table.Column<int>(type: "int", nullable: false),
-                    ordersId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: true),
+                    Quantity = table.Column<int>(type: "int", nullable: true),
+                    OrderCollectionId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderOrderCollection", x => new { x.OrderCollectionId, x.ordersId });
+                    table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderOrderCollection_OrderCollection_OrderCollectionId",
+                        name: "FK_Orders_OrderCollection_OrderCollectionId",
                         column: x => x.OrderCollectionId,
                         principalTable: "OrderCollection",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderOrderCollection_Orders_ordersId",
-                        column: x => x.ordersId,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderOrderCollection_ordersId",
-                table: "OrderOrderCollection",
-                column: "ordersId");
+                name: "IX_Orders_OrderCollectionId",
+                table: "Orders",
+                column: "OrderCollectionId");
         }
 
         /// <inheritdoc />
@@ -138,16 +120,13 @@ namespace SalesMonitoring.Migrations
                 name: "ItemSales");
 
             migrationBuilder.DropTable(
-                name: "OrderOrderCollection");
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "RecordExpenses");
 
             migrationBuilder.DropTable(
                 name: "OrderCollection");
-
-            migrationBuilder.DropTable(
-                name: "Orders");
         }
     }
 }
