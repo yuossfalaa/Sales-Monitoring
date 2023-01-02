@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
+using System.Windows.Controls;
 
 namespace Sales_Monitoring.ViewModels
 {
@@ -21,6 +22,7 @@ namespace Sales_Monitoring.ViewModels
         #endregion
         #region Commands
         public ICommand SelectedDateChnagedCommand { get; private set; }
+        public ICommand SelectedStoreTypeChnagedCommand { get; private set; }
 
         #endregion
         #region Private Variables
@@ -29,6 +31,12 @@ namespace Sales_Monitoring.ViewModels
         private DateTime _dateselected;
         private Visibility _Visibility_ProductWiseSales;
         private Visibility _Visibility_Overallsales;
+        private bool _instoreSelected;
+        private bool _ZomatoSelected;
+        private bool _SwiggySelected;
+        private double? _salestotal;
+        private double? _expensestotal;
+
         #endregion
         #region Private Objects
         private ObservableCollection<RecordExpenses> _Expenses;
@@ -112,6 +120,31 @@ namespace Sales_Monitoring.ViewModels
                 RaisePropertyChanged("DateSelected");
             }
         }
+        public bool InStoreSelected
+        {
+            get { return _instoreSelected; }
+            set { _instoreSelected = value;RaisePropertyChanged("InStoreSelected"); }
+        }
+        public bool ZomatoSelected
+        {
+            get { return _ZomatoSelected; }
+            set { _ZomatoSelected = value; RaisePropertyChanged("ZomatoSelected"); }
+        }
+        public bool SwiggySelected
+        {
+            get { return _SwiggySelected; }
+            set { _SwiggySelected = value; RaisePropertyChanged("SwiggySelected"); }
+        }
+        public double? SalesTotal
+        {
+            get { return _salestotal; }
+            set { _salestotal = value; RaisePropertyChanged("SalesTotal"); }
+        }  
+        public double? ExpensesTotal
+        {
+            get { return _expensestotal; }
+            set { _expensestotal = value; RaisePropertyChanged("ExpensesTotal"); }
+        }
 
         #endregion
         #region Constructor
@@ -119,8 +152,13 @@ namespace Sales_Monitoring.ViewModels
         {
             ProductWiseSales = true;
             Visibility_ProductWiseSales = Visibility.Visible;
+            InStoreSelected = true;
+            ZomatoSelected = true;
+            SwiggySelected = true;
+            SalesTotal = 0;
             //commands
             SelectedDateChnagedCommand = new RelayCommand(SelectedDateChanged);
+            SelectedStoreTypeChnagedCommand = new RelayCommand(SelectedStoreTypeChnaged);
             DateSelected = DateSelectedView();
             //Get info From DB
             GetAll();
@@ -129,8 +167,44 @@ namespace Sales_Monitoring.ViewModels
 
 
         }
+
+
         #endregion
         #region Private Method 
+        private void SelectedStoreTypeChnaged()
+        {
+            GetallOrder();
+            ObservableCollection<OrderCollection> Temp = new ObservableCollection<OrderCollection>(orderCollections);
+            if (!InStoreSelected)
+            {
+                foreach (OrderCollection obj in Temp)
+                {
+                    if (obj.Type== "In Store") orderCollections.Remove(obj);
+                }
+            }
+            if (!ZomatoSelected)
+            {
+                foreach (OrderCollection obj in Temp)
+                {
+                    if (obj.Type == "Zomato") orderCollections.Remove(obj);
+                }
+            }
+            if (!SwiggySelected)
+            {
+                foreach (OrderCollection obj in Temp)
+                {
+                    if (obj.Type == "Swiggy") orderCollections.Remove(obj);
+                }
+            }
+            if (!InStoreSelected && !ZomatoSelected && !SwiggySelected)
+            {
+                InStoreSelected = true;
+                ZomatoSelected = true;
+                SwiggySelected = true;
+            }
+            CalcSalesTotal();
+            Temp = null;
+        }
         private void GetallItemSales()
         {
             IDataService<ItemSales> GetAllRecord = new GenericDataService<ItemSales>(new SalesMonitoringDbContextFactory());
@@ -145,18 +219,39 @@ namespace Sales_Monitoring.ViewModels
         {
             //Get Expenses 
             IDataService<RecordExpenses> GetAllExpensesRecord = new GenericDataService<RecordExpenses>(new SalesMonitoringDbContextFactory());
-            IDataService<OrderCollection> GetAllorderRecord = new GenericDataService<OrderCollection>(new SalesMonitoringDbContextFactory());
-            IDataService<Order> GetAllorders = new GenericDataService<Order>(new SalesMonitoringDbContextFactory());
             Expenses = new ObservableCollection<RecordExpenses>(GetAllExpensesRecord.GetAllExpensesBetweenDates(DateSelected, DateTime.Now));
+            GetallOrder();
+            CalcSalesTotal();
+            CalcExpensesTotal();
+
+        }
+        private void GetallOrder()
+        {
+            IDataService<Order> GetAllorders = new GenericDataService<Order>(new SalesMonitoringDbContextFactory());
+            IDataService<OrderCollection> GetAllorderRecord = new GenericDataService<OrderCollection>(new SalesMonitoringDbContextFactory());
             orderCollections = new ObservableCollection<OrderCollection>(GetAllorderRecord.GetAllOrdersBetweenDates(DateSelected, DateTime.Now));
-            
-            foreach(OrderCollection oc in orderCollections)
+            foreach (OrderCollection oc in orderCollections)
             {
-                oc.orders=GetAllorders.GetAllorders(oc.Id);
+                oc.orders = GetAllorders.GetAllorders(oc.Id);
             }
 
         }
-
+        private void CalcSalesTotal()
+        {
+            SalesTotal = 0;
+            foreach (OrderCollection obj in orderCollections)
+            {
+                SalesTotal += obj.TotalBill;
+            }
+        }
+        private void CalcExpensesTotal()
+        {
+            ExpensesTotal = 0;
+            foreach (RecordExpenses obj in Expenses)
+            {
+                ExpensesTotal += obj.Amount;
+            }
+        }
         private DateTime DateSelectedView()
         {
             if (UpdateCurrentViewModelCommand.ViewTypeName == "ReportViewDay") { return StartOfDay(DateTime.Now); }

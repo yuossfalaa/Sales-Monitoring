@@ -46,13 +46,19 @@
             <Border Margin="0,5,20,0" BorderBrush="Black" BorderThickness="0.3,0,0.3,0.5" CornerRadius="10">
                 <ListBox Margin="5"
                 FontSize="22"
-                Style="{StaticResource MaterialDesignFilterChipListBox}">
+                Style="{StaticResource MaterialDesignFilterChipListBox}"  >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction 
+                            Command="{Binding SelectedStoreTypeChnagedCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <ListBoxItem
-                    Content="In Store" />
+                    Content="In Store" IsSelected="{Binding InStoreSelected}"/>
                     <ListBoxItem
-                    Content="Zomato" />
+                    Content="Zomato" IsSelected="{Binding ZomatoSelected}"/>
                     <ListBoxItem
-                    Content="Swiggy" />
+                    Content="Swiggy" IsSelected="{Binding SwiggySelected}"/>
                 </ListBox>
             </Border>
             <Button 
@@ -167,7 +173,6 @@
                                 </Binding>
                             </materialDesign:DataGridTextColumn.Binding>
                         </materialDesign:DataGridTextColumn>
-                        
                     </DataGrid.Columns>
                     <DataGrid.RowDetailsTemplate  >
                         <DataTemplate >
@@ -205,7 +210,7 @@
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                                         <materialDesign:DataGridTextColumn.Binding>
                                             <Binding
-                            Path="ItemPrice">
+                            Path="Price">
                                             </Binding>
                                         </materialDesign:DataGridTextColumn.Binding>
                                     </materialDesign:DataGridTextColumn>
@@ -302,10 +307,17 @@
                        
                     </DataGrid.Columns>
                 </DataGrid>
-                <Label FontSize="22" 
-                       Content="Sales : 20000$" 
+                <TextBlock FontSize="22" 
                        Margin="20,0,0,0"
-                       FontWeight="Bold"/>
+                       FontWeight="Bold">
+                    <TextBlock.Text>
+                        <Binding Path="SalesTotal" Mode="TwoWay">
+                            <Binding.StringFormat>
+                                Overall Sales : {0} $
+                            </Binding.StringFormat>
+                        </Binding>
+                    </TextBlock.Text>
+                </TextBlock>
             </StackPanel>
             <StackPanel Grid.Column="1">
                 <DataGrid
@@ -369,10 +381,17 @@
                     </DataGrid.Columns>
 
                 </DataGrid>
-                <Label FontSize="22" 
-                       Content="Expenses : 20000$" 
+                <TextBlock FontSize="22" 
                        Margin="25,0,0,0"
-                       FontWeight="Bold"/>
+                       FontWeight="Bold">
+                    <TextBlock.Text>
+                        <Binding Path="ExpensesTotal" Mode="TwoWay">
+                            <Binding.StringFormat>
+                                Overall Expenses : {0} $
+                            </Binding.StringFormat>
+                        </Binding>
+                    </TextBlock.Text>
+                </TextBlock>
             </StackPanel>
         </Grid>
     </Grid>
