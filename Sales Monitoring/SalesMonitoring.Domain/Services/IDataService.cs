@@ -1,6 +1,7 @@
 ﻿using Sales_Monitoring.SalesMonitoring.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace Sales_Monitoring.SalesMonitoring.Domain.Services
@@ -15,6 +16,7 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Services
         bool Delete(T entity);
 
         //custom Func
+        ObservableCollection<Order> GetAllorders(int OrderCollectionId);
         Items Get(string name);
         ItemSales GetItemSalesByName(string name);
         ItemSales GetItemSales(int Itemid);

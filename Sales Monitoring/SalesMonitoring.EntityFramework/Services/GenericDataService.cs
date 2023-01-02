@@ -1,11 +1,10 @@
 ﻿using Sales_Monitoring.SalesMonitoring.Domain.Models;
 using Sales_Monitoring.SalesMonitoring.Domain.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System;
 using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace Sales_Monitoring.SalesMonitoring.EntityFramework.Services
 {
@@ -65,6 +64,15 @@ namespace Sales_Monitoring.SalesMonitoring.EntityFramework.Services
             using (SalesMonitoringDbContext context = _contextFactory.CreateDbContext())
             {
                 List<T> entities = context.Set<T>().ToList();
+                return entities;
+            }
+        }
+
+        public ObservableCollection<Order> GetAllorders(int OrderCollectionId)
+        {
+            using (SalesMonitoringDbContext context = _contextFactory.CreateDbContext())
+            {
+                ObservableCollection<Order> entities = new ObservableCollection<Order>(context.Set<Order>().Where(a => a.OrderCollectionId == OrderCollectionId).ToList());
                 return entities;
             }
         }
