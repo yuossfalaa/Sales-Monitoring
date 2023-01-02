@@ -75,19 +75,28 @@
             <StackPanel Grid.Column="0" >
                 <DataGrid 
                     Visibility="{Binding Visibility_Overallsales}"
-                    ItemsSource="{Binding Path= orderCollections}"
+                    ItemsSource="{Binding Path=orderCollections}"
                     AutoGenerateColumns="False"
                     CanUserAddRows="False"
                     IsReadOnly="True"
-                    SelectionUnit="Cell"
-                    SelectionMode="Extended" 
                     Margin="20,20,0,10"
                     FontSize="16"
                     MinHeight="450"
                     MaxHeight="600"
                     MaxWidth="850"
+                    RowDetailsVisibilityMode="VisibleWhenSelected"
                     Background="{StaticResource GridBackgroundBruch}">
                     <DataGrid.Columns>
+                        <materialDesign:DataGridTextColumn
+                    Header="Count"
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
+                            <materialDesign:DataGridTextColumn.Binding>
+                                <Binding
+                            Path="Count">
+                                </Binding>
+                            </materialDesign:DataGridTextColumn.Binding>
+                        </materialDesign:DataGridTextColumn>
                         <materialDesign:DataGridTextColumn
                     Header="Date"
                     ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
@@ -105,36 +114,6 @@
                             <materialDesign:DataGridTextColumn.Binding>
                                 <Binding
                             Path="Type">
-                                </Binding>
-                            </materialDesign:DataGridTextColumn.Binding>
-                        </materialDesign:DataGridTextColumn>
-                        <materialDesign:DataGridTextColumn
-                    Header="Product Name"
-                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
-                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
-                            <materialDesign:DataGridTextColumn.Binding>
-                                <Binding
-                            Path="ItemName">
-                                </Binding>
-                            </materialDesign:DataGridTextColumn.Binding>
-                        </materialDesign:DataGridTextColumn>
-                        <materialDesign:DataGridTextColumn
-                    Header="Amount"
-                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
-                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
-                            <materialDesign:DataGridTextColumn.Binding>
-                                <Binding
-                            Path="Quantity">
-                                </Binding>
-                            </materialDesign:DataGridTextColumn.Binding>
-                        </materialDesign:DataGridTextColumn>
-                        <materialDesign:DataGridTextColumn
-                    Header="Price"
-                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
-                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
-                            <materialDesign:DataGridTextColumn.Binding>
-                                <Binding
-                            Path="ItemPrice">
                                 </Binding>
                             </materialDesign:DataGridTextColumn.Binding>
                         </materialDesign:DataGridTextColumn>
@@ -188,7 +167,52 @@
                                 </Binding>
                             </materialDesign:DataGridTextColumn.Binding>
                         </materialDesign:DataGridTextColumn>
+                        
                     </DataGrid.Columns>
+                    <DataGrid.RowDetailsTemplate  >
+                        <DataTemplate >
+                            <DataGrid 
+                                      ItemsSource="{Binding Path=orders}" 
+                                      Background="{x:Null}"
+                                      AutoGenerateColumns="False"
+                                      CanUserAddRows="False"
+                                      IsReadOnly="True"
+                                      FontSize="16">
+                                <DataGrid.Columns>
+                                    <materialDesign:DataGridTextColumn
+                                        Header="Product Name"
+                                        ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
+                                        <materialDesign:DataGridTextColumn.Binding>
+                                            <Binding
+                                                Path="ItemName">
+                                            </Binding>
+                                        </materialDesign:DataGridTextColumn.Binding>
+                                    </materialDesign:DataGridTextColumn>
+                                    <materialDesign:DataGridTextColumn
+                    Header="Amount"
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
+                                        <materialDesign:DataGridTextColumn.Binding>
+                                            <Binding
+                            Path="Quantity">
+                                            </Binding>
+                                        </materialDesign:DataGridTextColumn.Binding>
+                                    </materialDesign:DataGridTextColumn>
+                                    <materialDesign:DataGridTextColumn
+                    Header="Price"
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
+                                        <materialDesign:DataGridTextColumn.Binding>
+                                            <Binding
+                            Path="ItemPrice">
+                                            </Binding>
+                                        </materialDesign:DataGridTextColumn.Binding>
+                                    </materialDesign:DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DataTemplate>
+                    </DataGrid.RowDetailsTemplate>
                 </DataGrid>
                 <DataGrid 
                     Visibility="{Binding Visibility_ProductWiseSales}"

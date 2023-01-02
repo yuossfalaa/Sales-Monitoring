@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.Generic;
 
 namespace Sales_Monitoring.ViewModels
 {
@@ -145,8 +146,14 @@ namespace Sales_Monitoring.ViewModels
             //Get Expenses 
             IDataService<RecordExpenses> GetAllExpensesRecord = new GenericDataService<RecordExpenses>(new SalesMonitoringDbContextFactory());
             IDataService<OrderCollection> GetAllorderRecord = new GenericDataService<OrderCollection>(new SalesMonitoringDbContextFactory());
+            IDataService<Order> GetAllorders = new GenericDataService<Order>(new SalesMonitoringDbContextFactory());
             Expenses = new ObservableCollection<RecordExpenses>(GetAllExpensesRecord.GetAllExpensesBetweenDates(DateSelected, DateTime.Now));
             orderCollections = new ObservableCollection<OrderCollection>(GetAllorderRecord.GetAllOrdersBetweenDates(DateSelected, DateTime.Now));
+            
+            foreach(OrderCollection oc in orderCollections)
+            {
+                oc.orders=GetAllorders.GetAllorders(oc.Id);
+            }
 
         }
 
