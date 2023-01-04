@@ -8,7 +8,7 @@ namespace Sales_Monitoring.SalesMonitoring.EntityFramework
         public SalesMonitoringDbContext CreateDbContext(string[] args = null)
         {
             var options = new DbContextOptionsBuilder<SalesMonitoringDbContext>();
-            options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=SalesMonitoringDb;Trusted_Connection=True;");
+            options.UseSqlite("Data Source = SalesMonitoring.db");
             return new SalesMonitoringDbContext(options.Options);
 
         }

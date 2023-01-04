@@ -153,12 +153,18 @@ namespace Sales_Monitoring.ViewModels
         #region Constructor
         public ReportViewModel()
         {
-            ProductWiseSales = true;
-            Visibility_ProductWiseSales = Visibility.Visible;
+
+            //init Vars
+            ProductWiseSales = false;
+            Overallsales = true;
+            Visibility_ProductWiseSales = Visibility.Collapsed;
+            Visibility_Overallsales = Visibility.Visible;
             InStoreSelected = true;
             ZomatoSelected = true;
             SwiggySelected = true;
             SalesTotal = 0;
+
+
             //commands
             SelectedDateChnagedCommand = new RelayCommand(SelectedDateChanged);
             SelectedStoreTypeChnagedCommand = new RelayCommand(SelectedStoreTypeChnaged);

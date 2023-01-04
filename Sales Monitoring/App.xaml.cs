@@ -1,4 +1,7 @@
-﻿using Sales_Monitoring.ViewModels;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Sales_Monitoring.SalesMonitoring.EntityFramework;
+using Sales_Monitoring.ViewModels;
 using Sales_Monitoring.Views;
 using System;
 using System.Collections.Generic;
@@ -15,15 +18,18 @@ namespace Sales_Monitoring
     /// </summary>
     public partial class App : Application
     {
+        private readonly SalesMonitoringDbContextFactory _contextFactory = new SalesMonitoringDbContextFactory();
+
         protected override void OnStartup(StartupEventArgs e)
         {
+            using (SalesMonitoringDbContext context = _contextFactory.CreateDbContext())
+            {
+                context.Database.Migrate();
+            }
             Window window = new MainWindow();
-
-            MainViewModel viewModel= new MainViewModel();
+            MainViewModel viewModel = new MainViewModel();
             window.DataContext = viewModel;
-
             window.Show();
-
             base.OnStartup(e);
         }
     }
