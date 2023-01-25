@@ -143,7 +143,7 @@ namespace Sales_Monitoring.ViewModels
                 try
                 {
                     EditRecord.Update(SelectedItem.Id, SelectedItem);
-
+                     
                     ItemSales itemSales = EditItemSalesRecord.GetItemSales(SelectedItem.Id);
                     itemSales.ItemName=SelectedItem.ItemName;
                     EditItemSalesRecord.Update(itemSales.Id, itemSales);

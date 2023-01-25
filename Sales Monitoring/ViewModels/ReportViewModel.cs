@@ -13,6 +13,7 @@ using Microsoft.Win32;
 using ServiceStack.Text;
 using System.Linq;
 using System.IO;
+using System.Windows.Controls;
 
 namespace Sales_Monitoring.ViewModels
 {
@@ -44,6 +45,8 @@ namespace Sales_Monitoring.ViewModels
         private ObservableCollection<RecordExpenses> _Expenses;
         private ObservableCollection<OrderCollection> _OrdersCollections;
         private ObservableCollection<ItemSales> _ItemSales;
+        private DataGridRowDetailsVisibilityMode _rowDetailsVisible;
+
         #endregion
         #region Public Objects
         public ObservableCollection<RecordExpenses> Expenses
@@ -56,12 +59,22 @@ namespace Sales_Monitoring.ViewModels
             get { return _OrdersCollections; }
             set { _OrdersCollections = value; RaisePropertyChanged("orderCollections"); }
         }
+        public DataGridRowDetailsVisibilityMode RowDetailsVisible
+        {
+            get { return _rowDetailsVisible; }
+            set
+            {
+                _rowDetailsVisible = value;
+                RaisePropertyChanged("RowDetailsVisible");
+            }
+        }
         public ObservableCollection<ItemSales> ItemSales
         {
             get { return _ItemSales; }
             set { _ItemSales = value; RaisePropertyChanged("ItemSales");}
         }
         public ObservableCollection<OrderCollecionCSV> OCCSV = new ObservableCollection<OrderCollecionCSV>();
+        public ObservableCollection<ItemSalesCSV> ItemSalesCSVs= new ObservableCollection<ItemSalesCSV>();
         #endregion
         #region Public Variables
         public bool ProductWiseSales
@@ -183,53 +196,91 @@ namespace Sales_Monitoring.ViewModels
         {
 
             var sfd = new SaveFileDialog { Filter = "CSV|*.csv", FileName="Expenses",  AddExtension = true };
-            if (sfd.ShowDialog().Value)
+            try
             {
-                string dirPath = sfd.FileName;
-                string csv = CsvSerializer.SerializeToCsv(Expenses.ToList());
-                File.WriteAllText(dirPath, csv);
+                if (sfd.ShowDialog().Value)
+                {
+                    string dirPath = sfd.FileName;
+                    string csv = CsvSerializer.SerializeToCsv(Expenses.ToList());
+                    File.WriteAllText(dirPath, csv);
+                }
+                sfd = new SaveFileDialog { Filter = "CSV|*.csv", FileName = "Product Sales", AddExtension = true };
+                if (sfd.ShowDialog().Value)
+                {
+                    string dirPath = sfd.FileName;
+                    ItemSalesCSVBuilder();
+                    string csv = CsvSerializer.SerializeToCsv(ItemSalesCSVs.ToList());
+                    File.WriteAllText(dirPath, csv);
+                }
+                sfd = new SaveFileDialog { Filter = "CSV|*.csv", FileName = "Overall Sales", AddExtension = true };
+                if (sfd.ShowDialog().Value)
+                {
+                    string dirPath = sfd.FileName;
+                    OrderCSVBuilder();
+                    string csv = CsvSerializer.SerializeToCsv(OCCSV.ToList());
+                    File.WriteAllText(dirPath, csv);
+                }
             }
-            sfd = new SaveFileDialog { Filter = "CSV|*.csv", FileName = "Product Sales", AddExtension = true };
-            if (sfd.ShowDialog().Value)
-            {
-                string dirPath = sfd.FileName;
-                string csv = CsvSerializer.SerializeToCsv(ItemSales.ToList());
-                File.WriteAllText(dirPath, csv);
+            catch (Exception ex) 
+            { 
+                MessageBox.Show(ex.ToString());
             }
-            sfd = new SaveFileDialog { Filter = "CSV|*.csv", FileName = "Overall Sales", AddExtension = true };
-            if (sfd.ShowDialog().Value)
-            {
-                string dirPath = sfd.FileName;
-                OrderCSVBuilder();
-                string csv = CsvSerializer.SerializeToCsv(OCCSV.ToList());
-                File.WriteAllText(dirPath, csv);
-            }
-
 
         }
         private void OrderCSVBuilder()
         {
             foreach (OrderCollection e in orderCollections)
             {
+                int index = 0;
+
                 foreach (Order obj in e.orders)
                 {
                     OrderCollecionCSV Temp = new OrderCollecionCSV();
-                    Temp.ItemName = obj.ItemName;
-                    Temp.Price= obj.Price;
-                    Temp.Quantity= obj.Quantity;
-                    Temp.Count = e.Count;
-                    Temp.Date = e.Date;
-                    Temp.Type = e.Type;
-                    Temp.Tax = e.Tax;
-                    Temp.Discount = e.Discount;
-                    Temp.Roundoff = e.Roundoff;
-                    Temp.TotalBill = e.TotalBill;
-                    Temp.Payment = e.Payment;
-                    OCCSV.Add(Temp);
+                    if (index == 0)
+                    {
+                        Temp.ItemName = obj.ItemName;
+                        Temp.Price = obj.Price;
+                        Temp.Quantity = obj.Quantity;
+                        Temp.Count = e.Count;
+                        Temp.Date = e.Date;
+                        Temp.Type = e.Type;
+                        Temp.Tax = e.Tax;
+                        Temp.Discount = e.Discount;
+                        Temp.Roundoff = e.Roundoff;
+                        Temp.TotalBill = e.TotalBill;
+                        Temp.Payment = e.Payment;
+                        OCCSV.Add(Temp);
+                        index++;
+                    }
+                    else
+                    {
+                        Temp.ItemName = obj.ItemName;
+                        Temp.Price = obj.Price;
+                        Temp.Quantity = obj.Quantity;
+                        OCCSV.Add(Temp);
+                    }
+
                 }
         
             }
         }
+        private void ItemSalesCSVBuilder()
+        {
+            foreach (ItemSales e in ItemSales)
+            {
+                ItemSalesCSV Temp = new ItemSalesCSV();
+
+                Temp.Product_Name = e.ItemName;
+                Temp.Qty_InStore = e.QtyInStore;
+                Temp.In_Store_Sales = e.InStoreSales;
+                Temp.Qty_Zomato = e.QtyZomato;
+                Temp.Zomato_Sales = e.ZomatoSales;
+                Temp.Qty_Swiggy = e.QtySwiggy;
+                Temp.Swiggy_Sales = e.SwiggySales;
+                ItemSalesCSVs.Add(Temp);
+            }
+        }
+
         private void SelectedStoreTypeChnaged()
         {
             GetallOrder();
@@ -322,7 +373,7 @@ namespace Sales_Monitoring.ViewModels
             return theDate.Date;
         }
         #endregion
-
+       
     }
     
 }

@@ -91,8 +91,9 @@
                     MinHeight="450"
                     MaxHeight="600"
                     MaxWidth="850"
-                    RowDetailsVisibilityMode="VisibleWhenSelected"
-                    Background="{StaticResource GridBackgroundBruch}">
+                    RowDetailsVisibilityMode="{Binding RowDetailsVisible}"
+                    
+                    Background="{StaticResource GridBackgroundBruch}" MouseUp="DataGrid_MouseUp">
                     <DataGrid.Columns>
                         <materialDesign:DataGridTextColumn
                     Header="Count"

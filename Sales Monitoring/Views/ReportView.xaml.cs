@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sales_Monitoring.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,19 @@ namespace Sales_Monitoring.Views
         public ReportView()
         {
             InitializeComponent();
+        }
+
+        private void DataGrid_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ReportViewModel viewModel = (ReportViewModel)DataContext;
+            if (viewModel.RowDetailsVisible == DataGridRowDetailsVisibilityMode.Collapsed)
+            {
+                viewModel.RowDetailsVisible = DataGridRowDetailsVisibilityMode.VisibleWhenSelected;
+            }
+            else
+            {
+                viewModel.RowDetailsVisible = DataGridRowDetailsVisibilityMode.Collapsed;
+            }
         }
     }
 }

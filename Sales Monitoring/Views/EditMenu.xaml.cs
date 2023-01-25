@@ -23,6 +23,7 @@ namespace Sales_Monitoring.Views
         public EditMenu()
         {
             InitializeComponent();
+            
         }
     }
 }
