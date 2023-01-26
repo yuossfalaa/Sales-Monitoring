@@ -30,7 +30,7 @@ namespace Sales_Monitoring.ViewModels
             SaveBillCommand = new RelayCommand(SaveBill, true);
             QuantityTextChangedCommand = new RelayCommand<Order>(QuantityTextChanged, true);
             SearchTextChangedCommand = new RelayCommand(SearchItem, true);
-            TaxesTextChangedCommand = new RelayCommand(TaxesTextChanged, true);
+            //TaxesTextChangedCommand = new RelayCommand(TaxesTextChanged, true);
             RoundoffTextChangedCommand = new RelayCommand(RoundoffText, true);
             DiscountTextChangedCommand = new RelayCommand(DiscountText, true);
             PriceChangedCommand = new RelayCommand(Pricechange, true);
@@ -101,7 +101,7 @@ namespace Sales_Monitoring.ViewModels
         private bool _upi_gpayselected { get; set; }
         private string _storename { get; set; }
         private string _searchitemtext { get; set; }
-        private double _taxeslabel { get; set; }
+        private double? _taxeslabel { get; set; }
         private double _roundofflabel { get; set; }
         private double _discountlabel { get; set; }
         private double? _TotalBill { get; set; }
@@ -164,7 +164,7 @@ namespace Sales_Monitoring.ViewModels
                 
             }
         }
-        public double TaxesLabel
+        public double? TaxesLabel
         {
             get { return _taxeslabel; }
             set
@@ -289,36 +289,45 @@ namespace Sales_Monitoring.ViewModels
             Order ordertobeadded = new Order();
             ordertobeadded.ItemName = item.ItemName;
             ordertobeadded.Quantity = 1;
+            ordertobeadded.TaxesPercentage = item.TaxesPercentage;
             order.Add(ordertobeadded);
             if (StoreName == "In Store")
             {
                 ordertobeadded.Price = item.ItemInstorePrice;
                 TotalBill += item.ItemInstorePrice;
+                TaxesLabel += ordertobeadded.Price * (ordertobeadded.TaxesPercentage / 100);
+                TotalBill+= ordertobeadded.Price * (ordertobeadded.TaxesPercentage / 100);
+
+
             }
             else if (StoreName == "Zomato")
             {
                 ordertobeadded.Price = item.ItemZomatoPrice;
                 TotalBill += item.ItemZomatoPrice;
+                TaxesLabel += ordertobeadded.Price * (ordertobeadded.TaxesPercentage / 100);
+                TotalBill += ordertobeadded.Price * (ordertobeadded.TaxesPercentage / 100);
+
             }
             else
             {
                 ordertobeadded.Price = item.ItemSwiggyPrice;
                 TotalBill += item.ItemSwiggyPrice;
+                TaxesLabel += ordertobeadded.Price * (ordertobeadded.TaxesPercentage / 100);
+                TotalBill += ordertobeadded.Price * (ordertobeadded.TaxesPercentage / 100);
             }
         }
         private void QuantityTextChanged(Order ordertoberemoved)
         {
             TotalBill = 0;
+            TaxesLabel = 0;
             foreach (Order obj in order)
             {
-                TotalCalculator(obj.Quantity, obj.Price);
+                TotalCalculator(obj.Quantity, obj.Price,obj.TaxesPercentage);
             }
             discountadded = false;
             roundoffadded = false;
-            taxesadded = false;
             DiscountText();
             RoundoffText();
-            TaxesTextChanged();
 
             if (ordertoberemoved.Quantity <= 0) order.Remove(ordertoberemoved);
 
@@ -328,16 +337,15 @@ namespace Sales_Monitoring.ViewModels
         {
 
             TotalBill = 0;
+            TaxesLabel = 0;
             foreach (Order obj in order)
             {
-                TotalCalculator(obj.Quantity, obj.Price);
+                TotalCalculator(obj.Quantity, obj.Price, obj.TaxesPercentage);
             }
             discountadded = false;
             roundoffadded = false;
-            taxesadded = false;
             DiscountText();
             RoundoffText();
-            TaxesTextChanged();
         }
         private void DiscountText()
         {
@@ -358,7 +366,6 @@ namespace Sales_Monitoring.ViewModels
 
 
         }
-
         private void RoundoffText()
         {
             if (roundoffadded)
@@ -376,44 +383,34 @@ namespace Sales_Monitoring.ViewModels
             }
 
         }
-
-        private void TaxesTextChanged()
+        private void TotalCalculator(int? Quantity , double? price, double? taxesPercentage)
         {
-            if (taxesadded)
-            {
-                TotalBill -= taxesamount;
-                TotalBill += TaxesLabel;
-                taxesamount = TaxesLabel;
-                taxesadded = true;
-            }
-            else
-            {
-                TotalBill += TaxesLabel;
-                taxesamount =TaxesLabel;
-                taxesadded = true;
-            }
+            TotalBill += 
+                (Quantity * price)+
+                ((Quantity * price)*
+                (taxesPercentage/100));
+
+            TaxesLabel +=
+                (Quantity * price) +
+                ((Quantity * price) *
+                (taxesPercentage / 100));
+            TotalBill = Math.Round((double)TotalBill, 2);
+            TaxesLabel = Math.Round((double)TaxesLabel, 2);
+            
         }
-
-        private void TotalCalculator(int? Quantity , double? price)
-        {
-            TotalBill += (Quantity * price);
-        }
-
-
         private void Additem(Order Addedorder)
         {
             Addedorder.Quantity++;
-            TotalCalculator(1, Addedorder.Price);
+            TotalCalculator(1, Addedorder.Price,Addedorder.TaxesPercentage);
 
         }
         private void Removeitem(Order ordertoberemoved)
         {
 
-            TotalCalculator(-1, ordertoberemoved.Price);
+            TotalCalculator(-1, ordertoberemoved.Price, ordertoberemoved.TaxesPercentage);
             if (ordertoberemoved.Quantity >= 1) ordertoberemoved.Quantity -= 1;
             if (ordertoberemoved.Quantity <= 0) order.Remove(ordertoberemoved);
         }
-        
         private void SaveBill()
         {
             IDataService<OrderCollection> SaveOrder = new GenericDataService<OrderCollection>(new SalesMonitoringDbContextFactory());
@@ -447,22 +444,38 @@ namespace Sales_Monitoring.ViewModels
             IDataService<ItemSales> SaveItemSales = new GenericDataService<ItemSales>(new SalesMonitoringDbContextFactory());
             foreach (Order obj in order)
             {
-                ItemSales item = SaveItemSales.GetItemSalesByName(obj.ItemName);
+                ItemSales item =new ItemSales();
+                item = SaveItemSales.GetItemSalesByName(obj.ItemName);
+                if (item.Taxes == null) item.Taxes = 0;
+
+                if (item.QtyInStore == null) item.QtyInStore = 0;
+                if (item.InStoreSales == null) item.InStoreSales = 0;
+
+                if (item.QtyZomato == null) item.QtyZomato = 0;
+                if (item.ZomatoSales == null) item.ZomatoSales = 0;
+
+                if (item.QtySwiggy == null) item.QtySwiggy = 0;
+                if (item.SwiggySales == null) item.SwiggySales = 0;
+
+                item.Taxes += 
+                    (obj.Quantity * obj.Price)*
+                    ( obj.TaxesPercentage/100);
+
                 if (StoreName == "In Store")
                 {
                     item.QtyInStore += obj.Quantity;
-                    item.InStoreSales = obj.Quantity * obj.Price;
+                    item.InStoreSales += obj.Quantity * obj.Price;
 
                 }
                 else if (StoreName == "Zomato")
                 {
                     item.QtyZomato += obj.Quantity;
-                    item.ZomatoSales = obj.Quantity * obj.Price;
+                    item.ZomatoSales += obj.Quantity * obj.Price;
                 }
                 else
                 {
                     item.QtySwiggy += obj.Quantity;
-                    item.SwiggySales = obj.Quantity * obj.Price;
+                    item.SwiggySales += obj.Quantity * obj.Price;
                 }
 
                 SaveItemSales.Update(item.Id,item);

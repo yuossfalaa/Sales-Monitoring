@@ -127,7 +127,7 @@ namespace Sales_Monitoring.ViewModels
                     itemSales.ZomatoSales = 0;
                     itemSales.QtySwiggy = 0;
                     itemSales.SwiggySales = 0;
-                    itemSales.TaxesPercentage = 0;
+                    itemSales.Taxes = 0;
 
                     AddItemSalesRecord.Create(itemSales);
                 }

@@ -200,14 +200,14 @@
                                 <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Margin="10,0,10,0">
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="Taxes" FontSize="22" Margin="0,5,0,5"/>
-                                        <TextBox Text="{Binding TaxesLabel , Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged, Delay=500}" FontSize="22" Margin="357,5,0,5">
-                                            <i:Interaction.Triggers>
+                                        <TextBlock Text="{Binding TaxesLabel , Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" FontSize="22" Margin="357,5,0,5">
+                                            <!--<i:Interaction.Triggers>
                                                 <i:EventTrigger EventName="LostFocus">
                                                     <i:InvokeCommandAction 
                                                      Command="{Binding TaxesTextChangedCommand}"/>
                                                 </i:EventTrigger>
-                                            </i:Interaction.Triggers>
-                                        </TextBox>
+                                            </i:Interaction.Triggers>-->
+                                        </TextBlock>
                                     </StackPanel>
                                 </Border>
                                 <Border BorderBrush="Gray" BorderThickness="0,0,0,0" Margin="10,0,10,0">

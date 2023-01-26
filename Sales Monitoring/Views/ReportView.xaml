@@ -322,7 +322,17 @@
                                 </Binding>
                             </materialDesign:DataGridTextColumn.Binding>
                         </materialDesign:DataGridTextColumn>
-                       
+                        <materialDesign:DataGridTextColumn
+                    Header="Over all Taxes"
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
+                            <materialDesign:DataGridTextColumn.Binding>
+                                <Binding
+                            Path="Taxes">
+                                </Binding>
+                            </materialDesign:DataGridTextColumn.Binding>
+                        </materialDesign:DataGridTextColumn>
+
                     </DataGrid.Columns>
                 </DataGrid>
                 <TextBlock FontSize="22" 

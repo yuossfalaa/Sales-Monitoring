@@ -288,6 +288,7 @@ namespace Sales_Monitoring.ViewModels
                 Temp.Zomato_Sales = e.ZomatoSales;
                 Temp.Qty_Swiggy = e.QtySwiggy;
                 Temp.Swiggy_Sales = e.SwiggySales;
+                Temp.Taxes = e.Taxes;
                 ItemSalesCSVs.Add(Temp);
             }
         }
