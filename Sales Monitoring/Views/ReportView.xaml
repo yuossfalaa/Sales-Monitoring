@@ -21,10 +21,26 @@
             <DatePicker
                 Width="200"
                 Height="50"
-                FontSize="24"
-                materialDesign:HintAssist.Hint="Pick Date"
-                SelectedDate="{Binding DateSelected}"
-                Margin="20,0,20,0">
+                FontSize="18"
+                materialDesign:HintAssist.Hint="From"
+                SelectedDate="{Binding DateSelectedFrom}"
+                Margin="20,0,20,0"
+                Style="{StaticResource MaterialDesignFloatingHintDatePicker}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectedDateChanged">
+                        <i:InvokeCommandAction 
+                            Command="{Binding SelectedDateChnagedCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </DatePicker>
+            <DatePicker
+                Width="200"
+                Height="50"
+                FontSize="18"
+                materialDesign:HintAssist.Hint="To"
+                SelectedDate="{Binding DateSelectedTo}"
+                Margin="20,0,20,0"
+                Style="{StaticResource MaterialDesignFloatingHintDatePicker}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectedDateChanged">
                         <i:InvokeCommandAction 

@@ -16,6 +16,8 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Models
         public double? ZomatoSales { get; set; }
         public int? QtySwiggy { get; set; }
         public double? SwiggySales { get; set; }
+        public double? TaxesPercentage { get; set; }
+
 
     }
 }

@@ -127,6 +127,7 @@ namespace Sales_Monitoring.ViewModels
                     itemSales.ZomatoSales = 0;
                     itemSales.QtySwiggy = 0;
                     itemSales.SwiggySales = 0;
+                    itemSales.TaxesPercentage = 0;
 
                     AddItemSalesRecord.Create(itemSales);
                 }
@@ -140,6 +141,7 @@ namespace Sales_Monitoring.ViewModels
                 if (SelectedItem.ItemInstorePrice == null) SelectedItem.ItemInstorePrice = 0;
                 if (SelectedItem.ItemSwiggyPrice == null) SelectedItem.ItemSwiggyPrice = 0;
                 if (SelectedItem.ItemZomatoPrice == null) SelectedItem.ItemZomatoPrice = 0;
+                if (SelectedItem.TaxesPercentage == null) SelectedItem.TaxesPercentage = 0;
                 try
                 {
                     EditRecord.Update(SelectedItem.Id, SelectedItem);

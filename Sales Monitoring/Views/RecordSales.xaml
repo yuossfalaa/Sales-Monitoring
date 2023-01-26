@@ -42,22 +42,31 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Button Width="140" Height="150"  
-                            Command="{Binding  RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.AddItemToOrderCommand}"
-                            CommandParameter="{Binding}"
-                            Background="#e9ebea" BorderBrush="#74B9FF" BorderThickness="0,0,0,3" 
-                            Margin="5,10,5,0"
-                            Style="{StaticResource MaterialDesignFlatLightBgButton}">
-                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="140" Height="150" >
-                                    <TextBlock FontSize="24"  Margin="10,20,10,0" 
-                                               TextAlignment="Center"  TextWrapping="Wrap">
+                            <Button  
+                                    Height="150"
+                                    Command="{Binding  RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.AddItemToOrderCommand}"
+                                    CommandParameter="{Binding}"
+                                    Background="#e9ebea" BorderBrush="#74B9FF" BorderThickness="0,0,0,3" 
+                                    Margin="5,10,5,0"
+                                    Style="{StaticResource MaterialDesignFlatLightBgButton}">
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Height="150" MinWidth="140">
+                                    <TextBlock FontSize="24"  Margin="10,20,10,0" Height="90"
+                                               TextAlignment="Center"  TextWrapping="WrapWithOverflow">
                                         <TextBlock.Text>
                                             <Binding Path="ItemName">
                                                 <Binding.StringFormat>
-                                                    Add on {0}
+                                                    {0}
                                                 </Binding.StringFormat>
                                             </Binding>
                                         </TextBlock.Text>
+                                        <TextBlock.ToolTip>
+                                            <Binding Path="ItemName">
+                                                <Binding.StringFormat>
+                                                    {0}
+                                                </Binding.StringFormat>
+                                            </Binding>
+                                        </TextBlock.ToolTip>
+                                        
                                     </TextBlock>
                                     <TextBlock FontSize="22"  
                                                Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.InstorePriceTextBoxVisibility,Mode=TwoWay}"
@@ -114,70 +123,76 @@
                         </TextBlock>
                         <Border Background="#e9ebea" Margin="40,0,40,0" BorderBrush="Gray" BorderThickness="0.3">
                             <StackPanel>
-                                <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Margin="10,0,10,0">
+                                <!--<Border BorderBrush="Gray" BorderThickness="0,0,0,1" Margin="10,0,10,0">
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="item" FontSize="24" Margin="0,3,0,3"/>
-                                        <Label Content="Quantity" FontSize="24" Margin="150,3,0,3"/>
-                                        <Label Content="Price" FontSize="24" Margin="100,3,0,3"/>
+                                        <Label Content="Quantity" FontSize="24" Margin="155,3,0,3"/>
+                                        <Label Content="Price" FontSize="24" Margin="95,3,0,3"/>
                                     </StackPanel>
-                                </Border>
-                                <ItemsControl  ItemsSource="{Binding order}">
+                                </Border>-->
+                                <ItemsControl  ItemsSource="{Binding order}" Margin="0,15,0,0">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Margin="10,0,10,0">
-                                                <Grid >
-                                                    <Label Content="{Binding ItemName ,Mode=TwoWay}" FontSize="22" HorizontalAlignment="Left" />
-                                                    <Button  Style="{StaticResource MaterialDesignIconButton}" 
+                                                <StackPanel Orientation="Vertical" >
+                                                    <Label Content="{Binding ItemName ,Mode=TwoWay}" ToolTip="{Binding ItemName ,Mode=TwoWay}" Margin="0,10,0,0"
+                                                           BorderBrush="DarkGray"  BorderThickness="0,0,0,0.6"
+                                                           FontSize="22" FontWeight="Bold"  HorizontalAlignment="Center" />
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                                                        <Button  Style="{StaticResource MaterialDesignIconButton}" 
                                                              Command="{Binding  RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.RemoveItemCommand}"
                                                              CommandParameter="{Binding}"
-                                                             Width="40" Height="40" Foreground="Black" 
-                                                             HorizontalAlignment="Left" Margin="170,0,0,0">
-                                                        <materialDesign:PackIcon Kind="MinusCircleOutline" Width="30" Height="30"/>
-                                                    </Button>
-                                                    <TextBox Text="{Binding Quantity,Mode=TwoWay}"  FontSize="22"  TextAlignment="Center" 
-                                                             Width="100"  HorizontalAlignment="Left"  Margin="210,0,0,0">
-                                                        <i:Interaction.Triggers>
-                                                            <i:EventTrigger EventName="LostFocus">
-                                                                <i:InvokeCommandAction 
+                                                             Width="30" Height="30" Foreground="Black" 
+                                                             Margin="10,0,0,0">
+                                                            <materialDesign:PackIcon Kind="MinusCircleOutline" Width="30" Height="30"/>
+                                                        </Button>
+                                                        <TextBox Text="{Binding Quantity,Mode=TwoWay}"  FontSize="16"  TextAlignment="Center" 
+                                                             Width="100"  Height="30"  Margin="10,0,0,15">
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName="LostFocus">
+                                                                    <i:InvokeCommandAction 
                                                                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},
                                                                     Path=DataContext.QuantityTextChangedCommand}" 
                                                                     CommandParameter="{Binding}"/>
-                                                            </i:EventTrigger>
-                                                        </i:Interaction.Triggers>
-                                                    </TextBox>
-                                                    <Button  Style="{StaticResource MaterialDesignIconButton}" 
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
+                                                        </TextBox>
+                                                        <Button  Style="{StaticResource MaterialDesignIconButton}" 
                                                              Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},  Path=DataContext.AddItemCommand}"
                                                              CommandParameter="{Binding}"
-                                                             Width="40" Height="40" Foreground="Black" HorizontalAlignment="Left" Margin="310,0,0,0">
-                                                        <materialDesign:PackIcon Kind="PlusCircleOutline" Width="30" Height="30"/>
-                                                    </Button>
-                                                    <TextBox  Width="100" FontSize="22" Margin="380,4,0,6" 
-                                                              HorizontalAlignment="Left" TextAlignment="Center" 
+                                                              Width="30" Height="30" Foreground="Black" Margin="10,0,0,0">
+                                                            <materialDesign:PackIcon Kind="PlusCircleOutline" Width="30" Height="30"/>
+                                                        </Button>
+                                                        <TextBox  Width="100" FontSize="18"  Margin="40,0,0,15" Height="30"
+                                                              TextAlignment="Center" 
+                                                              materialDesign:TextFieldAssist.SuffixText="₹"
                                                               IsEnabled="{Binding Path=IsChecked, ElementName=EnableEditing}">
-                                                        <i:Interaction.Triggers>
-                                                            <i:EventTrigger EventName="LostFocus">
-                                                                <i:InvokeCommandAction 
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName="LostFocus">
+                                                                    <i:InvokeCommandAction 
                                                                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},
                                                                     Path=DataContext.PriceChangedCommand}" 
                                                                     CommandParameter="{Binding}"/>
-                                                            </i:EventTrigger>
-                                                        </i:Interaction.Triggers>
-                                                        <TextBox.Text>
-                                                            <Binding Path="Price">
-                                                                <Binding.StringFormat>
-                                                                    {0}
-                                                                </Binding.StringFormat>
-                                                            </Binding>
-                                                        </TextBox.Text>
-                                                    </TextBox>
-                                                    <ToggleButton x:Name="EnableEditing"
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
+                                                            <TextBox.Text>
+                                                                <Binding Path="Price">
+                                                                    <Binding.StringFormat>
+                                                                        {0}
+                                                                    </Binding.StringFormat>
+                                                                </Binding>
+                                                            </TextBox.Text>
+                                                        </TextBox>
+                                                        <ToggleButton x:Name="EnableEditing"
                                                     IsChecked="False"
                                                     Width="30" Height="30" 
-                                                    HorizontalAlignment="Left" Margin="480,0,0,0"
+                                                    Margin="20,0,0,0"
                                                     Style="{StaticResource MaterialDesignActionToggleButton}"
                                                     Content="{materialDesign:PackIcon Kind=PencilOutline}"
                                                     materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=PencilOffOutline}" />
-                                                </Grid>
+                                                    </StackPanel>
+                                                   
+                                                </StackPanel>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>

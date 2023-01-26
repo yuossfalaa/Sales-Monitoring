@@ -9,6 +9,7 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Models
         public double? ItemInstorePrice { get; set; }
         public double? ItemZomatoPrice { get; set; }
         public double? ItemSwiggyPrice { get; set; }
+        public double? TaxesPercentage { get; set; }
 
     }
 }

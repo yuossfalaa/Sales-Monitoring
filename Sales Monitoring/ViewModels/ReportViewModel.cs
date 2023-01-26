@@ -31,7 +31,8 @@ namespace Sales_Monitoring.ViewModels
         #region Private Variables
         private bool _ProductWiseSales;
         private bool _Overallsales;
-        private DateTime _dateselected;
+        private DateTime _dateselectedfrom;
+        private DateTime _dateselectedto;
         private Visibility _Visibility_ProductWiseSales;
         private Visibility _Visibility_Overallsales;
         private bool _instoreSelected;
@@ -127,13 +128,22 @@ namespace Sales_Monitoring.ViewModels
             get { return _Visibility_Overallsales; }
             set { _Visibility_Overallsales = value; RaisePropertyChanged("Visibility_Overallsales"); }
         }
-        public DateTime DateSelected
+        public DateTime DateSelectedFrom
         {
-            get { return _dateselected; }
+            get { return _dateselectedfrom; }
             set
             {
-                _dateselected = value;
-                RaisePropertyChanged("DateSelected");
+                _dateselectedfrom = value;
+                RaisePropertyChanged("DateSelectedFrom");
+            }
+        }
+        public DateTime DateSelectedTo
+        {
+            get { return _dateselectedto; }
+            set
+            {
+                _dateselectedto = value;
+                RaisePropertyChanged("DateSelectedTo");
             }
         }
         public bool InStoreSelected
@@ -182,7 +192,8 @@ namespace Sales_Monitoring.ViewModels
             SelectedDateChnagedCommand = new RelayCommand(SelectedDateChanged);
             SelectedStoreTypeChnagedCommand = new RelayCommand(SelectedStoreTypeChnaged);
             ExportCommand = new RelayCommand(Export);
-            DateSelected = DateSelectedView();
+            DateSelectedFrom = DateSelectedView();
+            DateSelectedTo= DateTime.Now;
             //Get info From DB
             GetAll();
             DBGetAll.DoWork += (obj, e) => GetallItemSales();
@@ -323,13 +334,17 @@ namespace Sales_Monitoring.ViewModels
         }
         private void SelectedDateChanged()
         {
+            if (DateSelectedTo < DateSelectedFrom)
+            {
+                DateSelectedTo = DateSelectedFrom;
+            }
             GetAll();
         }
         private void GetAll()
         {
             //Get Expenses 
             IDataService<RecordExpenses> GetAllExpensesRecord = new GenericDataService<RecordExpenses>(new SalesMonitoringDbContextFactory());
-            Expenses = new ObservableCollection<RecordExpenses>(GetAllExpensesRecord.GetAllExpensesBetweenDates(DateSelected, DateTime.Now));
+            Expenses = new ObservableCollection<RecordExpenses>(GetAllExpensesRecord.GetAllExpensesBetweenDates(DateSelectedFrom, DateSelectedTo));
             GetallOrder();
             CalcSalesTotal();
             CalcExpensesTotal();
@@ -339,7 +354,7 @@ namespace Sales_Monitoring.ViewModels
         {
             IDataService<Order> GetAllorders = new GenericDataService<Order>(new SalesMonitoringDbContextFactory());
             IDataService<OrderCollection> GetAllorderRecord = new GenericDataService<OrderCollection>(new SalesMonitoringDbContextFactory());
-            orderCollections = new ObservableCollection<OrderCollection>(GetAllorderRecord.GetAllOrdersBetweenDates(DateSelected, DateTime.Now));
+            orderCollections = new ObservableCollection<OrderCollection>(GetAllorderRecord.GetAllOrdersBetweenDates(DateSelectedFrom, DateSelectedTo));
             foreach (OrderCollection oc in orderCollections)
             {
                 oc.orders = GetAllorders.GetAllorders(oc.Id);

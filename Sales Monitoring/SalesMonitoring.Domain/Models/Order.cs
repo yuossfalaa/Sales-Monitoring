@@ -10,6 +10,8 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Models
         public string ItemName { get; set; }
         public double? Price { get; set; }
         private int? _quantity { get; set; }
+        public double? TaxesPercentage { get; set; }
+
         public int? Quantity
         {
             get { return _quantity; }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sales_Monitoring.SalesMonitoring.EntityFramework;
 
@@ -10,9 +11,11 @@ using Sales_Monitoring.SalesMonitoring.EntityFramework;
 namespace SalesMonitoring.Migrations
 {
     [DbContext(typeof(SalesMonitoringDbContext))]
-    partial class SalesMonitoringDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230126061907_addedtaxes")]
+    partial class addedtaxes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
