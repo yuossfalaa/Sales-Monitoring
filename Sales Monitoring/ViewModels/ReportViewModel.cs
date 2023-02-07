@@ -76,6 +76,7 @@ namespace Sales_Monitoring.ViewModels
         }
         public ObservableCollection<OrderCollecionCSV> OCCSV = new ObservableCollection<OrderCollecionCSV>();
         public ObservableCollection<ItemSalesCSV> ItemSalesCSVs= new ObservableCollection<ItemSalesCSV>();
+        public ObservableCollection<RecordExpensesCSV> recordExpensesCSV = new ObservableCollection<RecordExpensesCSV>();
         #endregion
         #region Public Variables
         public bool ProductWiseSales
@@ -212,7 +213,8 @@ namespace Sales_Monitoring.ViewModels
                 if (sfd.ShowDialog().Value)
                 {
                     string dirPath = sfd.FileName;
-                    string csv = CsvSerializer.SerializeToCsv(Expenses.ToList());
+                    ExpensesCSVBuilder();
+                    string csv = CsvSerializer.SerializeToCsv(recordExpensesCSV.ToList());
                     File.WriteAllText(dirPath, csv);
                 }
                 sfd = new SaveFileDialog { Filter = "CSV|*.csv", FileName = "Product Sales", AddExtension = true };
@@ -253,7 +255,8 @@ namespace Sales_Monitoring.ViewModels
                         Temp.Price = obj.Price;
                         Temp.Quantity = obj.Quantity;
                         Temp.Count = e.Count;
-                        Temp.Date = e.Date;
+                        Temp.Date = String.Format("{0:d}", e.Date);
+                        Temp.Time = String.Format("{0:t}", e.Date);
                         Temp.Type = e.Type;
                         Temp.Tax = e.Tax;
                         Temp.Discount = e.Discount;
@@ -290,6 +293,21 @@ namespace Sales_Monitoring.ViewModels
                 Temp.Swiggy_Sales = e.SwiggySales;
                 Temp.Taxes = e.Taxes;
                 ItemSalesCSVs.Add(Temp);
+            }
+        }
+        private void ExpensesCSVBuilder()
+        {
+            foreach (RecordExpenses e in Expenses)
+            {
+                RecordExpensesCSV temp = new RecordExpensesCSV();
+                temp.Date = String.Format("{0:d}", e.Date);
+                temp.Time = String.Format("{0:t}", e.Date);
+                temp.ItemName= e.ItemName;
+                temp.VendorName= e.VendorName;
+                temp.TaxId= e.TaxId;
+                temp.Amount= e.Amount;
+                temp.Mode= e.Mode;
+                recordExpensesCSV.Add(temp);
             }
         }
 
