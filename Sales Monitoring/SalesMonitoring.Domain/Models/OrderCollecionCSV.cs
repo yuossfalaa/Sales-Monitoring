@@ -4,7 +4,8 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Models
 {
     public class OrderCollecionCSV
     {
-        public DateTime? Date { get; set; }
+        public string? Date { get; set; }
+        public string? Time { get; set; }
         public string? Type { get; set; }
         public int? Count { get; set; }
         public string ItemName { get; set; }
