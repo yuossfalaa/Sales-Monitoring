@@ -294,48 +294,20 @@ namespace Sales_Monitoring.ViewModels
             if (StoreName == "In Store")
             {
                 ordertobeadded.Price = item.ItemInstorePrice;
-                TotalBill += item.ItemInstorePrice;
-                TaxesLabel += ordertobeadded.Price * (ordertobeadded.TaxesPercentage / 100);
-                TotalBill+= ordertobeadded.Price * (ordertobeadded.TaxesPercentage / 100);
-
-
             }
             else if (StoreName == "Zomato")
             {
                 ordertobeadded.Price = item.ItemZomatoPrice;
-                TotalBill += item.ItemZomatoPrice;
-                TaxesLabel += ordertobeadded.Price * (ordertobeadded.TaxesPercentage / 100);
-                TotalBill += ordertobeadded.Price * (ordertobeadded.TaxesPercentage / 100);
-
             }
             else
             {
                 ordertobeadded.Price = item.ItemSwiggyPrice;
-                TotalBill += item.ItemSwiggyPrice;
-                TaxesLabel += ordertobeadded.Price * (ordertobeadded.TaxesPercentage / 100);
-                TotalBill += ordertobeadded.Price * (ordertobeadded.TaxesPercentage / 100);
             }
-        }
-        private void QuantityTextChanged(Order ordertoberemoved)
-        {
-            TotalBill = 0;
-            TaxesLabel = 0;
-            foreach (Order obj in order)
-            {
-                TotalCalculator(obj.Quantity, obj.Price,obj.TaxesPercentage);
-            }
-            discountadded = false;
-            roundoffadded = false;
-            DiscountText();
-            RoundoffText();
-
-            if (ordertoberemoved.Quantity <= 0) order.Remove(ordertoberemoved);
-
+            RecalculatTotal();
 
         }
-        private void Pricechange()
+        private void RecalculatTotal()
         {
-
             TotalBill = 0;
             TaxesLabel = 0;
             foreach (Order obj in order)
@@ -356,7 +328,7 @@ namespace Sales_Monitoring.ViewModels
                 discountamount = DiscountLabel;
                 discountadded = true;
             }
-            else 
+            else
             {
                 TotalBill -= DiscountLabel;
                 discountamount = DiscountLabel;
@@ -383,17 +355,25 @@ namespace Sales_Monitoring.ViewModels
             }
 
         }
+        private void QuantityTextChanged(Order ordertoberemoved)
+        {
+            if (ordertoberemoved.Quantity <= 0) order.Remove(ordertoberemoved);
+            RecalculatTotal();
+        }
+        private void Pricechange()
+        {
+            RecalculatTotal();
+        }
+
         private void TotalCalculator(int? Quantity , double? price, double? taxesPercentage)
         {
             TotalBill += 
-                (Quantity * price)+
-                ((Quantity * price)*
-                (taxesPercentage/100));
+                (Quantity * price) +
+                ((Quantity * price)*(taxesPercentage/100));
 
             TaxesLabel +=
-                (Quantity * price) +
-                ((Quantity * price) *
-                (taxesPercentage / 100));
+                ((Quantity * price) *(taxesPercentage / 100));
+
             TotalBill = Math.Round((double)TotalBill, 2);
             TaxesLabel = Math.Round((double)TaxesLabel, 2);
             
@@ -401,15 +381,14 @@ namespace Sales_Monitoring.ViewModels
         private void Additem(Order Addedorder)
         {
             Addedorder.Quantity++;
-            TotalCalculator(1, Addedorder.Price,Addedorder.TaxesPercentage);
-
+            RecalculatTotal();
         }
         private void Removeitem(Order ordertoberemoved)
         {
-
-            TotalCalculator(-1, ordertoberemoved.Price, ordertoberemoved.TaxesPercentage);
             if (ordertoberemoved.Quantity >= 1) ordertoberemoved.Quantity -= 1;
             if (ordertoberemoved.Quantity <= 0) order.Remove(ordertoberemoved);
+            RecalculatTotal();
+
         }
         private void SaveBill()
         {
