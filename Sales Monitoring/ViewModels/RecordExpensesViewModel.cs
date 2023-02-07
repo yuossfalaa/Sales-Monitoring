@@ -61,6 +61,8 @@ namespace Sales_Monitoring.ViewModels
         private void EditSelectedItem()
         {
             if (SelectedItem.ItemName == null) SelectedItem.ItemName = "Item";
+            if (SelectedItem.VendorName == null) SelectedItem.ItemName = "Vendor";
+            if (SelectedItem.TaxId == null) SelectedItem.ItemName = "TaxId";
             if (SelectedItem.Mode == null) SelectedItem.Mode = "UPI";
             if (SelectedItem.Amount == null) SelectedItem.Amount = 0;
             if (SelectedItem.Date == null) SelectedItem.Date = DateTime.Now;
@@ -94,6 +96,8 @@ namespace Sales_Monitoring.ViewModels
                 try
                 {
                     if (RecordtobeAdded.ItemName == null) RecordtobeAdded.ItemName = "Item";
+                    if (RecordtobeAdded.VendorName == null) RecordtobeAdded.ItemName = "Vendor";
+                    if (RecordtobeAdded.TaxId == null) RecordtobeAdded.ItemName = "TaxId";
                     if (RecordtobeAdded.Mode  == null) RecordtobeAdded.Mode = "UPI";
                     if (RecordtobeAdded.Amount == null) RecordtobeAdded.Amount = 0;
                     if (RecordtobeAdded.Date == null) RecordtobeAdded.Date = DateTime.Now;
