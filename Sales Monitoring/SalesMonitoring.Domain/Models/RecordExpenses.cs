@@ -7,6 +7,8 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Models
     {
         private DateTime _date;
         private string _itemname;
+        private string _Vendorname;
+        private string _TaxId;
         private string _mode;
         private double _amount;
         public DateTime Date
@@ -19,6 +21,17 @@ namespace Sales_Monitoring.SalesMonitoring.Domain.Models
             get { return _itemname; }
             set { _itemname = value; RaisePropertyChanged("ItemName"); }
         }
+        public string VendorName
+        {
+            get { return _Vendorname; }
+            set { _Vendorname = value; RaisePropertyChanged("VendorName"); }
+        }
+        public string TaxId
+        {
+            get { return _TaxId; }
+            set { _TaxId = value; RaisePropertyChanged("ItemName"); }
+        }
+
         public double Amount
         {
             get { return _amount; }
