@@ -7,7 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -22,6 +24,8 @@ namespace Sales_Monitoring
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-UK");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-UK");
             using (SalesMonitoringDbContext context = _contextFactory.CreateDbContext())
             {
                 context.Database.Migrate();
