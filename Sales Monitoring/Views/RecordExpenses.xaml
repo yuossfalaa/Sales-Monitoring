@@ -25,8 +25,17 @@
                 Margin="20,0,20,0"/>
             <TextBox materialDesign:HintAssist.Hint="Item/Details" 
                      materialDesign:TextFieldAssist.HasClearButton="True"
-                     Width="300" Height="50"
+                     Width="200" Height="50"
                      Margin="0,0,20,0" FontSize="24" Text="{Binding RecordtobeAdded.ItemName , Mode=TwoWay}"/>
+            <TextBox materialDesign:HintAssist.Hint="Vendor Name" 
+                     materialDesign:TextFieldAssist.HasClearButton="True"
+                     Width="200" Height="50"
+                     Margin="0,0,20,0" FontSize="24" Text="{Binding RecordtobeAdded.VendorName , Mode=TwoWay}"/>
+            <TextBox materialDesign:HintAssist.Hint="Tax ID" 
+                     materialDesign:TextFieldAssist.HasClearButton="True"
+                     Width="120" Height="50"
+                     Text="{Binding RecordtobeAdded.TaxId , Mode=TwoWay}"
+                     Margin="0,0,20,0" FontSize="24"/>
             <TextBox materialDesign:HintAssist.Hint="Amount" 
                      materialDesign:TextFieldAssist.HasClearButton="True"
                      Width="120" Height="50"
@@ -99,6 +108,28 @@
                     <materialDesign:DataGridTextColumn.Binding>
                         <Binding
                             Path="ItemName"
+                            UpdateSourceTrigger="PropertyChanged">
+                        </Binding>
+                    </materialDesign:DataGridTextColumn.Binding>
+                </materialDesign:DataGridTextColumn>
+                <materialDesign:DataGridTextColumn
+                    Header="Vendor Name"
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
+                    <materialDesign:DataGridTextColumn.Binding>
+                        <Binding
+                            Path="VendorName"
+                            UpdateSourceTrigger="PropertyChanged">
+                        </Binding>
+                    </materialDesign:DataGridTextColumn.Binding>
+                </materialDesign:DataGridTextColumn>
+                <materialDesign:DataGridTextColumn
+                    Header="Tax ID"
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
+                    <materialDesign:DataGridTextColumn.Binding>
+                        <Binding
+                            Path="TaxId"
                             UpdateSourceTrigger="PropertyChanged">
                         </Binding>
                     </materialDesign:DataGridTextColumn.Binding>
